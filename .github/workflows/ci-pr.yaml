@@ -1,0 +1,39 @@
+name: Pull Request Simple Sanity Check
+on:
+    pull_request:
+        branches: [develop, main]
+jobs:
+    build-test-lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up JDK 17
+              uses: actions/setup-java@v4
+              with: 
+                distribution: 'temurin'
+                java-version: '17'
+                cache: 'gradle'
+
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+            
+            - name: Build (debug)
+              run: ./gradlew assembleDebug --stacktrace
+            
+            - name: Unit Tests
+              run: ./gradlew tests
+
+            - name: Android Lint
+              run: ./gradlew lint
+            
+            - name: Kotlin style (ktlint) + static analysis (detekt)
+              run: ./gradlew ktlintCheck detekt
+
+            - name: Upload reports
+              uses: actions/upload-artifact@v4
+              with:
+                name: ci-reports
+                path: |
+                    **/build/reports/**
+                    **/build/outputs/apk/debug/*.apk
