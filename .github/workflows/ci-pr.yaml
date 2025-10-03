@@ -29,6 +29,9 @@ jobs:
             
             - name: Kotlin style (ktlint) + static analysis (detekt)
               run: ./gradlew ktlintCheck detekt
+            
+            - name: Dependency updates (report only)
+              run: ./gradlew dependencyUpdates
 
             - name: Upload reports
               uses: actions/upload-artifact@v4
