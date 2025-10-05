@@ -1,4 +1,22 @@
+# 10/5/2025
+
+- Developing Kotlin Multiplatform
+
+Got it to set up.
+
+I went to this page to download the plugin
+
+[Plugin Link](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform?_gl=1%2A5nmlkh%2A_gcl_aw%2AR0NMLjE3NTk2ODk2MzkuQ2owS0NRandyb2pIQmhEZEFSSXNBSmRFSl9jbzlqd2wtaE01ZUlSM3RsbnQ4OWZlRGZjREx3MGNhT3AyYTQ1MlFwa3dyUVJfZWV3SzNUZ2FBc3hGRUFMd193Y0I.%2A_gcl_au%2AMTU1OTY1NjY0OC4xNzU5NTEyNjU4LjQ2NTY5OTIyOS4xNzU5Njg5OTU3LjE3NTk2ODk5NTY.%2AFPAU%2AMjk4MjQwNjQwLjE3NTk1MTI2Nzk.%2A_ga%2AMTk1NjQ5NDYzMC4xNzU5NTEyNjU5%2A_ga_9J976DJZ68%2AczE3NTk2ODk0NjMkbzIkZzEkdDE3NTk2OTAxNTgkajU5JGwwJGgw)
+
+Ignore the rating ;-)
+
+I downloaded the zip package
+
+Nvm tried pressing button computer crashed using some middle zip file they afftered.
+
 # 10/3/2025
+
+## Pipeline Stuff
 
 - Create first pipeline to work off of.
     - Simple and only focuses on creating test cases for the files we start with.
@@ -6,4 +24,8 @@
 - Updating README so it will be easy for us to follow professional standards when it comes to commits and etc.
 
 - Trying this new pipeline format that adds this weekly security check.
-    - It's new so I'm excited to see if I did it right and what I have done, so let's hope for the best. 🥰
+    - It's new so I'm excited to see if I did it right and what I have done, so let's hope for the best. 
+
+## Creating Kotlin Base for Multiplatform
+
+[Documentation Link](https://www.jetbrains.com/help/kotlin-multiplatform-dev/quickstart.html#set-up-the-environment)
