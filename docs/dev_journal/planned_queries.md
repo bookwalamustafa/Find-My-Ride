@@ -1,0 +1,130 @@
+# Planned Queries
+
+## Q01_OpenOffersBetweenLocations
+Purpose: Rider search page – list open offers between two locations in a time window.
+Inputs: origin_id, dest_id, start_ts, end_ts, min_seats
+SQL:
+```sql
+SELECT o.offer_id, u.username AS driver, v.make, v.model,
+       o.depart_at, o.seats_available, o.price_base, o.price_per_mile
+FROM RIDE_OFFER o
+JOIN "USER" u ON u.user_id = o.driver_id
+JOIN "VEHICLE" v ON v.vehicle_id = o.vehicle_id
+WHERE o.status = 'open'
+  AND o.original_location_id = ?1
+  AND o.dest_location_id = ?2
+  AND o.depart_at BETWEEN ?3 AND ?4
+  AND o.seats_available >= ?5
+ORDER BY o.depart_at;
+```
+
+## Q02_CreateRideRequest
+Purpose: Submit a new rider request.
+Inputs: rider_id, pickup_id, dropoff_id, earliest, latest, seats_needed
+SQL:
+```sql
+INSERT INTO RIDE_REQUEST(rider_id,pickup_location_id,dropoff_location_id,
+                         earliest_pickup,latest_pickup,seats_needed,status)
+VALUES (?1,?2,?3,?4,?5,?6,'open')
+RETURNING request_id;
+```
+
+## Q03_CreateRideOffer
+Purpose: Driver posts an offer.
+Inputs: driver_id, vehicle_id, origin_id, dest_id, depart_at, seats_avail, price_base, ppm
+SQL:
+```sql
+INSERT INTO RIDE_OFFER(driver_id,vehicle_id,original_location_id,dest_location_id,
+                       depart_at,seats_available,price_base,price_per_mile,status)
+VALUES (?1,?2,?3,?4,?5,?6,?7,?8,'open')
+RETURNING offer_id;
+```
+
+## Q04_MatchRequestToOffer
+Purpose: Create a match when capacity/time fits; mark request ‘matched’.
+Inputs: request_id, offer_id, seats_booked, price_total
+SQL:
+```sql
+BEGIN;
+INSERT INTO RIDE_MATCH(request_id,offer_id,seats_booked,price_total,state)
+VALUES (?1,?2,?3,?4,'pending');
+
+UPDATE RIDE_REQUEST
+SET status = 'matched'
+WHERE request_id = ?1;
+
+UPDATE RIDE_OFFER
+SET seats_available = seats_available - ?3,
+    status = CASE WHEN seats_available - ?3 = 0 THEN 'full' ELSE status END
+WHERE offer_id = ?2;
+
+COMMIT;
+```
+
+## Q05_UserUpcomingMatches
+Purpose: Show upcoming trips for a user (rider or driver).
+Inputs: user_id
+SQL:
+```sql
+SELECT m.match_id, m.state, m.matched_at,
+       ro.depart_at, ro.original_location_id, ro.dest_location_id,
+       rr.rider_id, ro.driver_id
+FROM RIDE_MATCH m
+JOIN RIDE_OFFER ro ON ro.offer_id = m.offer_id
+JOIN RIDE_REQUEST rr ON rr.request_id = m.request_id
+WHERE rr.rider_id = ?1 OR ro.driver_id = ?1
+ORDER BY ro.depart_at DESC;
+```
+
+## Q06_Completematch
+Purpose: Mark a match completed after trip (enables rating).
+Inputs: match_id
+SQL:
+```sql
+UPDATE RIDE_MATCH SET state='completed' WHERE match_id=?1;
+```
+
+## Q07_CreateRating
+Purpose: Add a rating after completion; prevents self-rating by constraint.
+Inputs: match_id, from_user_id, to_user_id, stars, comment
+SQL:
+```sql
+INSERT INTO RATING(match_id,from_user_id,to_user_id,stars,comment)
+VALUES (?1,?2,?3,?4,?5);
+```
+
+## Q08_UpdateRatingAverages
+Purpose: Recompute USER.rating_avg (could be run nightly or after insert).
+SQL:
+```sql
+UPDATE "USER" u
+SET rating_avg = COALESCE((
+  SELECT AVG(r.stars*1.0) FROM RATING r WHERE r.to_user_id = u.user_id
+), u.rating_avg);
+```
+
+## Q09_DriverDashboardStats
+Purpose: Driver dashboard totals.
+Inputs: driver_id
+SQL:
+```sql
+SELECT
+  SUM(CASE WHEN m.state='completed' THEN m.price_total ELSE 0 END) AS revenue_completed,
+  SUM(m.seats_booked) AS seats_booked_total,
+  SUM(CASE WHEN m.state='no_show' THEN 1 ELSE 0 END) AS no_shows
+FROM RIDE_MATCH m
+JOIN RIDE_OFFER o ON o.offer_id = m.offer_id
+WHERE o.driver_id = ?1;
+```
+
+## Q10_AdminHealthCheck
+Purpose: Quick integrity checks for grading/demo.
+SQL:
+```sql
+SELECT 'offers_open' AS metric, COUNT(*) val FROM RIDE_OFFER WHERE status='open'
+UNION ALL
+SELECT 'requests_open', COUNT(*) FROM RIDE_REQUEST WHERE status='open'
+UNION ALL
+SELECT 'matches_pending', COUNT(*) FROM RIDE_MATCH WHERE state='pending';
+```
+
