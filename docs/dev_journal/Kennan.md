@@ -14,6 +14,5 @@ sqlite> .tables
 Injecting Database Information (TO-DO):
 ```bash
 
-sqlite3 findmyride.db < database/teamDeliverable2_DDL.sql
 sqlite3 findmyride.db < database/populate.sql
 ```
