@@ -1,6 +1,6 @@
 # Planned Queries
 
-## Q01_OpenOffersBetweenLocations
+## Q01_OpenOffersBetweenLocations - Samii Shabuse
 Purpose: Rider search page – list open offers between two locations in a time window.
 Inputs: origin_id, dest_id, start_ts, end_ts, min_seats
 SQL:
@@ -18,7 +18,7 @@ WHERE o.status = 'open'
 ORDER BY o.depart_at;
 ```
 
-## Q02_CreateRideRequest
+## Q02_CreateRideRequest - Samii Shabuse
 Purpose: Submit a new rider request.
 Inputs: rider_id, pickup_id, dropoff_id, earliest, latest, seats_needed
 SQL:
@@ -29,7 +29,7 @@ VALUES (?1,?2,?3,?4,?5,?6,'open')
 RETURNING request_id;
 ```
 
-## Q03_CreateRideOffer
+## Q03_CreateRideOffer - Kennan Lu
 Purpose: Driver posts an offer.
 Inputs: driver_id, vehicle_id, origin_id, dest_id, depart_at, seats_avail, price_base, ppm
 SQL:
@@ -40,7 +40,7 @@ VALUES (?1,?2,?3,?4,?5,?6,?7,?8,'open')
 RETURNING offer_id;
 ```
 
-## Q04_MatchRequestToOffer
+## Q04_MatchRequestToOffer - Kennan Lu
 Purpose: Create a match when capacity/time fits; mark request ‘matched’.
 Inputs: request_id, offer_id, seats_booked, price_total
 SQL:
@@ -61,7 +61,7 @@ WHERE offer_id = ?2;
 COMMIT;
 ```
 
-## Q05_UserUpcomingMatches
+## Q05_UserUpcomingMatches - Samii Shabuse
 Purpose: Show upcoming trips for a user (rider or driver).
 Inputs: user_id
 SQL:
@@ -76,7 +76,7 @@ WHERE rr.rider_id = ?1 OR ro.driver_id = ?1
 ORDER BY ro.depart_at DESC;
 ```
 
-## Q06_Completematch
+## Q06_Completematch - Mustafa Bookwala
 Purpose: Mark a match completed after trip (enables rating).
 Inputs: match_id
 SQL:
@@ -84,7 +84,7 @@ SQL:
 UPDATE RIDE_MATCH SET state='completed' WHERE match_id=?1;
 ```
 
-## Q07_CreateRating
+## Q07_CreateRating - Mustafa Bookwala
 Purpose: Add a rating after completion; prevents self-rating by constraint.
 Inputs: match_id, from_user_id, to_user_id, stars, comment
 SQL:
@@ -93,7 +93,7 @@ INSERT INTO RATING(match_id,from_user_id,to_user_id,stars,comment)
 VALUES (?1,?2,?3,?4,?5);
 ```
 
-## Q08_UpdateRatingAverages
+## Q08_UpdateRatingAverages - Samii Shabuse 
 Purpose: Recompute USER.rating_avg (could be run nightly or after insert).
 SQL:
 ```sql
@@ -103,7 +103,7 @@ SET rating_avg = COALESCE((
 ), u.rating_avg);
 ```
 
-## Q09_DriverDashboardStats
+## Q09_DriverDashboardStats - Kennan Lu
 Purpose: Driver dashboard totals.
 Inputs: driver_id
 SQL:
@@ -117,7 +117,7 @@ JOIN RIDE_OFFER o ON o.offer_id = m.offer_id
 WHERE o.driver_id = ?1;
 ```
 
-## Q10_AdminHealthCheck
+## Q10_AdminHealthCheck - Mustafa Bookwala
 Purpose: Quick integrity checks for grading/demo.
 SQL:
 ```sql
