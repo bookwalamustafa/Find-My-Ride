@@ -1,0 +1,107 @@
+vehicle_id,owner_user_id,make,model,color,plate,seats_total,year,fun_fact
+1,2,Tesla,"Model Y",Blue,NJ-7909,7,2025,n/a
+2,5,Tesla,"Model 3",Gray,NJ-6737,5,2024,n/a
+3,6,Toyota,Camry,Silver,NJ-8767,4,2015,n/a
+4,8,Chevrolet,Malibu,Red,NJ-8301,5,2021,n/a
+5,9,Toyota,Camry,Blue,NJ-6823,4,2024,n/a
+6,14,Honda,Civic,White,NJ-7519,5,2022,n/a
+7,76,Toyota,Camry,Gray,NJ-1007,5,2014,"garage kept"
+8,30,Toyota,Camry,Black,NJ-1008,5,2020,"student vehicle"
+9,61,Hyundai,Elantra,White,NJ-1009,5,2018,"garage kept"
+10,43,Honda,Civic,Gold,NJ-1010,4,2011,rideshare-ready
+11,37,Honda,Civic,Blue,NJ-1011,4,2017,"student vehicle"
+12,104,Toyota,Camry,Silver,NJ-1012,4,2014,"garage kept"
+13,84,Honda,Civic,Red,NJ-1013,5,2018,rideshare-ready
+14,28,Honda,Civic,Silver,NJ-1014,5,2013,n/a
+15,48,Ford,Focus,Green,NJ-1015,4,2012,"student vehicle"
+16,20,Chevrolet,Malibu,Gray,NJ-1016,6,2011,rideshare-ready
+17,70,Ford,Focus,White,NJ-1017,4,2020,n/a
+18,56,Nissan,Altima,Gray,NJ-1018,5,2021,"garage kept"
+19,87,Tesla,"Model 3",Green,NJ-1019,4,2018,"garage kept"
+20,61,Ford,Focus,Black,NJ-1020,5,2017,n/a
+21,45,Nissan,Altima,Red,NJ-1021,5,2022,rideshare-ready
+22,7,Nissan,Altima,White,NJ-1022,4,2025,"student vehicle"
+23,52,Chevrolet,Malibu,White,NJ-1023,5,2018,n/a
+24,68,Tesla,"Model Y",Gray,NJ-1024,4,2023,"garage kept"
+25,75,Tesla,"Model Y",Gold,NJ-1025,5,2024,n/a
+26,19,Chevrolet,Malibu,Red,NJ-1026,5,2017,rideshare-ready
+27,84,Hyundai,Elantra,Gold,NJ-1027,6,2021,"garage kept"
+28,91,Hyundai,Elantra,White,NJ-1028,5,2018,rideshare-ready
+29,43,Tesla,"Model Y",Gray,NJ-1029,4,2020,n/a
+30,91,Tesla,"Model 3",Red,NJ-1030,4,2025,rideshare-ready
+31,89,Chevrolet,Malibu,Gray,NJ-1031,4,2019,"student vehicle"
+32,53,Tesla,"Model 3",Black,NJ-1032,4,2014,rideshare-ready
+33,10,Toyota,Camry,Maroon,NJ-1033,5,2014,"garage kept"
+34,20,Toyota,Camry,Black,NJ-1034,5,2025,"garage kept"
+35,50,Tesla,"Model 3",Blue,NJ-1035,5,2025,n/a
+36,103,Honda,Civic,Green,NJ-1036,5,2012,n/a
+37,27,Tesla,"Model 3",Black,NJ-1037,4,2017,n/a
+38,75,Ford,Focus,Red,NJ-1038,6,2022,"garage kept"
+39,59,Chevrolet,Malibu,Green,NJ-1039,5,2011,n/a
+40,93,Tesla,"Model Y",Red,NJ-1040,5,2012,"student vehicle"
+41,40,Tesla,"Model 3",Maroon,NJ-1041,4,2015,n/a
+42,56,Nissan,Altima,Gold,NJ-1042,5,2011,"student vehicle"
+43,46,Chevrolet,Malibu,Gold,NJ-1043,4,2017,rideshare-ready
+44,100,Tesla,"Model Y",Green,NJ-1044,4,2017,"student vehicle"
+45,45,Tesla,"Model 3",Gray,NJ-1045,4,2015,rideshare-ready
+46,79,Chevrolet,Malibu,Gold,NJ-1046,4,2024,rideshare-ready
+47,86,Ford,Focus,Black,NJ-1047,6,2025,"garage kept"
+48,19,Toyota,Camry,Green,NJ-1048,5,2018,n/a
+49,19,Tesla,"Model Y",Blue,NJ-1049,5,2011,"student vehicle"
+50,64,Nissan,Altima,Black,NJ-1050,4,2023,"garage kept"
+51,19,Nissan,Altima,White,NJ-1051,5,2020,rideshare-ready
+52,84,Honda,Civic,Silver,NJ-1052,5,2023,"garage kept"
+53,46,Ford,Focus,Maroon,NJ-1053,4,2024,n/a
+54,49,Chevrolet,Malibu,White,NJ-1054,4,2022,n/a
+55,84,Nissan,Altima,Green,NJ-1055,4,2016,rideshare-ready
+56,80,Nissan,Altima,Gold,NJ-1056,4,2016,rideshare-ready
+57,75,Tesla,"Model 3",Black,NJ-1057,5,2025,n/a
+58,7,Tesla,"Model Y",Silver,NJ-1058,5,2010,"garage kept"
+59,19,Tesla,"Model Y",Gray,NJ-1059,5,2013,"student vehicle"
+60,65,Chevrolet,Malibu,Maroon,NJ-1060,5,2023,"garage kept"
+61,64,Tesla,"Model Y",Gold,NJ-1061,6,2014,"garage kept"
+62,32,Tesla,"Model 3",Gray,NJ-1062,5,2023,rideshare-ready
+63,100,Chevrolet,Malibu,Blue,NJ-1063,5,2019,"garage kept"
+64,27,Nissan,Altima,Maroon,NJ-1064,5,2021,rideshare-ready
+65,75,Ford,Focus,Gold,NJ-1065,5,2016,"student vehicle"
+66,76,Ford,Focus,Red,NJ-1066,5,2011,rideshare-ready
+67,91,Nissan,Altima,Green,NJ-1067,5,2014,"garage kept"
+68,10,Tesla,"Model 3",Maroon,NJ-1068,6,2020,n/a
+69,59,Honda,Civic,Maroon,NJ-1069,5,2010,"student vehicle"
+70,56,Tesla,"Model 3",Gray,NJ-1070,5,2018,rideshare-ready
+71,80,Ford,Focus,Gray,NJ-1071,5,2022,rideshare-ready
+72,81,Nissan,Altima,Maroon,NJ-1072,4,2012,"student vehicle"
+73,81,Chevrolet,Malibu,Red,NJ-1073,4,2023,n/a
+74,93,Honda,Civic,Gold,NJ-1074,4,2019,n/a
+75,10,Hyundai,Elantra,Blue,NJ-1075,5,2021,rideshare-ready
+76,58,Tesla,"Model 3",Red,NJ-1076,6,2023,"student vehicle"
+77,28,Tesla,"Model 3",Gray,NJ-1077,6,2022,"student vehicle"
+78,65,Tesla,"Model 3",Red,NJ-1078,5,2018,"garage kept"
+79,43,Toyota,Camry,Gold,NJ-1079,5,2015,n/a
+80,59,Hyundai,Elantra,Black,NJ-1080,5,2018,"garage kept"
+81,48,Tesla,"Model Y",Green,NJ-1081,5,2013,"student vehicle"
+82,54,Hyundai,Elantra,Black,NJ-1082,5,2010,"garage kept"
+83,45,Toyota,Camry,Blue,NJ-1083,6,2025,rideshare-ready
+84,98,Tesla,"Model Y",White,NJ-1084,4,2016,rideshare-ready
+85,85,Tesla,"Model 3",Gray,NJ-1085,4,2019,"garage kept"
+86,10,Hyundai,Elantra,Silver,NJ-1086,4,2019,rideshare-ready
+87,91,Ford,Focus,Silver,NJ-1087,4,2014,rideshare-ready
+88,68,Chevrolet,Malibu,Silver,NJ-1088,5,2025,rideshare-ready
+89,91,Hyundai,Elantra,Gray,NJ-1089,5,2012,"student vehicle"
+90,93,Tesla,"Model Y",Green,NJ-1090,6,2021,n/a
+91,100,Ford,Focus,Blue,NJ-1091,5,2013,"garage kept"
+92,53,Chevrolet,Malibu,Green,NJ-1092,5,2013,"student vehicle"
+93,64,Toyota,Camry,Maroon,NJ-1093,5,2017,n/a
+94,81,Nissan,Altima,Black,NJ-1094,5,2013,"student vehicle"
+95,10,Toyota,Camry,Black,NJ-1095,5,2013,n/a
+96,40,Tesla,"Model 3",Green,NJ-1096,5,2021,"garage kept"
+97,78,Tesla,"Model 3",Green,NJ-1097,4,2025,"garage kept"
+98,45,Toyota,Camry,White,NJ-1098,4,2024,"garage kept"
+99,40,Hyundai,Elantra,Gray,NJ-1099,5,2021,n/a
+100,55,Chevrolet,Malibu,Red,NJ-1100,4,2024,n/a
+101,84,Tesla,"Model Y",Blue,NJ-1101,4,2020,"student vehicle"
+102,22,Tesla,"Model Y",Gray,NJ-1102,6,2016,"student vehicle"
+103,103,Tesla,"Model Y",White,NJ-1103,4,2010,rideshare-ready
+104,27,Tesla,"Model 3",Maroon,NJ-1104,5,2015,n/a
+105,84,Toyota,Camry,Silver,NJ-1105,4,2021,"student vehicle"
+106,78,Hyundai,Elantra,Blue,NJ-1106,4,2018,n/a
