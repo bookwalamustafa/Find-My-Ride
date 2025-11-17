@@ -12,7 +12,7 @@ Following the committing convention of [Conventional Commits](conventionalcommit
 - Mustafa Bookwala
 - Samii Shabuse
 - Kennan Lu
-=======
+
 
 ## Database Setup
 
