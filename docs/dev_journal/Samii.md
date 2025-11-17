@@ -1,3 +1,102 @@
+# 11/16/2025
+
+## Development Strategy
+
+As we team we focused and came up with the strategy with 3 Phases.
+
+We are following Three Phase Strategy:
+
+UI Development -> UI Connection Development -> Frontend to Backend Database Connection
+
+And [ChatGPT](https://chatgpt.com/share/691a8a83-69c0-800e-be1c-aa304a8a901f) verified this is the correct process that modern companies use.
+
+Following paging structure with react where we have folders for our features.
+
+- I'm make the structure
+
+```txt
+feature:
+  - auth/ # all authentication related stuff
+  - rides/ # all main ride related stuff
+  - .../ # insert other features
+```
+
+- I added a thing to allow colors to be used all over by every file in this project.
+  - I think Ken is also asking me about my hex color irl so idk how to think about that. /s
+
+Now need to focus on getting the code for login page to make sense.
+
+- I asked a question but he left on delivered.
+
+## KMP Notes:
+
+### @Composable
+- `@Composable` marks this as a composable fucntion - describing UI in Compose
+    - annotation in Jetpack Compose (and Compose Multiplatform)
+    - marks a function as part of the UI tree:
+      - Tells the compiler "this function describes teh UI, not normal code"
+        - It gets compiled into a declarative UI node
+        - Compose knows when to recompse it when states change
+        - Describes how its drawn on Android, iOS, DeskTop, and Web
+        - Compose can optimize it, skip re-rendering, or redraw specific parts. 
+    - Without it, function is just normal Kotlin function; Compose cannot treat it as UI.
+
+### @Composable Function Signature
+Example Code:
+```kotlin
+@Composable
+fun LoginScreen(
+    onLoginClick: (email: String, password: string) -> Unit = { _, _ -> }, 
+    onForgotPasswordClick: () -> Unit = {},
+    onSignUpClick: () -> Unit = {}
+) {
+    //...
+}
+```
+- `@Composable`: Marks this as a composable function -> describes UI in Compose.
+- `fun LoginScreen(..)`: This is the login screen component.
+- `onLoginClick`: A callback that takes an email and password. Default will be an empty lambda that does nothing
+- `onForgotPasswordClick`: Callback when "Forgot password?" is clicked, default does nothing.
+- `onSignUpClick`: Callback when "Sign Up now" is clicked, default is nothing. 
+- The defaults make it easy to preview or use this composable without wiring up real logic immediately.
+- `_` == means "I don't care about this input"
+
+#### WHY it looks weird
+- The function parameters are functions -- NOT Integers, Strings, or Booleans.
+
+Example of a normal param:
+```kotlin
+fun doSomething(name: String) {}
+```
+
+Kotlin also allows:
+```kotlin
+fun doSomething(callback: () -> Unit)
+
+// Which means callback is a function with no parameters that return nothing.
+```
+
+#### Why do this?
+Because your UI composable should NOT contain business logic.
+
+Example:
+Inside your screen you will have buttons like:
+```kotlin
+Button(onClick = { onLoginClick(email, password) }) { //... }
+```
+
+But the actual logic (like Firebase login, Drexel API login, etc.) will come from parent screen, not this UI.
+
+### Local state (email & password)
+Example:
+```kotlin
+var email by remember { mutableStateOf("") 
+var password by remember { mutableStateOf("") }
+```
+- `remember { mutableStateOf("") }`: Create state that Compose tracks and remember between recompositions.
+
+- Ken said I'm not the right type of asian so I'm not invited to the asian friendsgiving
+
 # 11/10/2025
 
 Tried developing more not working
