@@ -1,14 +1,15 @@
 package com.example.demo.feature.auth
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.LineHeightStyle.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
@@ -42,8 +43,9 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             AppLogo()
 
             Spacer(Modifier.height(16.dp))
@@ -68,7 +70,7 @@ fun SignUpScreen(
                 label = "Name",
                 value = state.name,
                 onValueChange = { onEvent(SignUpEvent.NameChanged(it)) },
-                placeholder = "Your Name",
+                placeholder = "Your name",
                 isPassword = false
             )
 
@@ -88,7 +90,7 @@ fun SignUpScreen(
                 label = "Password",
                 value = state.password,
                 onValueChange = { onEvent(SignUpEvent.PasswordChanged(it)) },
-                placeholder = "Your Password",
+                placeholder = "••••••••",
                 isPassword = true
             )
 
@@ -96,9 +98,9 @@ fun SignUpScreen(
 
             AuthTextField(
                 label = "Confirm Password",
-                value = state.password,
-                onValueChange = { onEvent(SignUpEvent.PasswordChanged(it)) },
-                placeholder = "Confirm Your Password",
+                value = state.confirmPassword,
+                onValueChange = { onEvent(SignUpEvent.ConfirmPasswordChanged(it)) },
+                placeholder = "••••••••",
                 isPassword = true
             )
 
@@ -108,14 +110,43 @@ fun SignUpScreen(
                 onClick = { onEvent(SignUpEvent.Submit) },
                 enabled = !state.isLoading,
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = DrexelGold,
                     contentColor = DrexelBlue
                 )
+            ) {
+                Text(if (state.isLoading) "Signing up..." else "Sign Up")
+            }
+
+            state.errorMessage?.let { error ->
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            Text(
+                text = "Already have an account?",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White
             )
+
+            Spacer(Modifier.height(4.dp))
+
+            TextButton(onClick = onNavigateToLogin) {
+                Text(
+                    text = "Log in",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = DrexelGold
+                )
+            }
         }
     }
 }
