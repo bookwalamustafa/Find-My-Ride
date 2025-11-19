@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
@@ -344,36 +345,98 @@ private fun SettingsRow(
 }
 
 @Composable
-private fun VehicleEditDialog(
+fun VehicleEditDialog(
     state: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = { onEvent(ProfileEvent.VehicleDialogDismissed) },
-        confirmButton = {
-            TextButton(onClick = { onEvent(ProfileEvent.SaveVehicleChanges) }) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { onEvent(ProfileEvent.VehicleDialogDismissed) }) {
-                Text("Cancel")
-            }
-        },
-        title = { Text("Edit Vehicle") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
-                    value = state.editingVehicleName,
-                    onValueChange = { onEvent(ProfileEvent.EditVehicleNameChanged(it)) },
-                    label = { Text("Vehicle name") }
-                )
-                OutlinedTextField(
-                    value = state.editingVehicleDetails,
-                    onValueChange = { onEvent(ProfileEvent.EditVehicleDetailsChanged(it)) },
-                    label = { Text("Color & plate") }
-                )
+    Dialog(onDismissRequest = { onEvent(ProfileEvent.VehicleDialogDismissed) }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+
+                // --------- TITLE BAR (DREXEL BLUE) --------- //
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(DrexelBlue)
+                        .padding(16.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = "Edit Vehicle",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+
+                // --------- CONTENT --------- //
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+
+                    OutlinedTextField(
+                        value = state.editingVehicleName,
+                        onValueChange = { onEvent(ProfileEvent.EditVehicleNameChanged(it)) },
+                        label = { Text("Vehicle Name") },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = DrexelBlue,
+                            unfocusedBorderColor = Color.Gray
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    OutlinedTextField(
+                        value = state.editingVehicleDetails,
+                        onValueChange = { onEvent(ProfileEvent.EditVehicleDetailsChanged(it)) },
+                        label = { Text("Color & Plate") },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = DrexelBlue,
+                            unfocusedBorderColor = Color.Gray
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                // --------- ACTION BUTTONS --------- //
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+
+                    TextButton(
+                        onClick = { onEvent(ProfileEvent.VehicleDialogDismissed) }
+                    ) {
+                        Text("Cancel", color = DrexelBlue)
+                    }
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Button(
+                        onClick = { onEvent(ProfileEvent.SaveVehicleChanges) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = DrexelGold,
+                            contentColor = DrexelBlue
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text("Save")
+                    }
+                }
             }
         }
-    )
+    }
 }
