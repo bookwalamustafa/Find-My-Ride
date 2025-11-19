@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.signup
 
 sealed interface SignUpEvent{
     data class NameChanged(val value: String) : SignUpEvent

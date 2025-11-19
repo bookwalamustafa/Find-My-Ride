@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.signup
 
 data class SignUpUiState(
     val name: String = "",

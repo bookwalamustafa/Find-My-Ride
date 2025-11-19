@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,7 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.demo.feature.auth.AppLogo
+import com.example.demo.feature.auth.AuthTextField
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 

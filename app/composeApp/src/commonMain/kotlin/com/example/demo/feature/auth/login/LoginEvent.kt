@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.login
 
 
 // Contract of what the user can do on the screen.

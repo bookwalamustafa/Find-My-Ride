@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.login
 
 data class LoginUiState(
     val email: String = "",

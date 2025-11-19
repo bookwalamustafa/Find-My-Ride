@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import com.example.demo.feature.auth.AppLogo
+import com.example.demo.feature.auth.AuthTextField
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
@@ -16,14 +18,16 @@ import com.example.demo.ui.theme.DrexelGold
 @Composable
 fun LoginRoute(
     viewModel: LoginViewModel = remember { LoginViewModel() },
-    onNavigateToSignUp: () -> Unit
+    onNavigateToSignUp: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
 
     LoginScreen(
         state = state,
         onEvent = viewModel::onEvent,
-        onNavigateToSignUp = onNavigateToSignUp
+        onNavigateToSignUp = onNavigateToSignUp,
+        onNavigateToForgotPassword = onNavigateToForgotPassword
     )
 }
 
@@ -34,7 +38,8 @@ fun LoginRoute(
 fun LoginScreen(
     state: LoginUiState,
     onEvent: (LoginEvent) -> Unit,
-    onNavigateToSignUp: () -> Unit
+    onNavigateToSignUp: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -93,7 +98,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = { onEvent(LoginEvent.ForgotPassword) }) {
+                TextButton(onClick = onNavigateToForgotPassword) {
                     Text(
                         text = "Forgot password?",
                         style = MaterialTheme.typography.labelMedium,
@@ -129,7 +134,7 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(36.dp))
 
             Text(
                 text = "Don't have an account?",
@@ -137,7 +142,7 @@ fun LoginScreen(
                 color = Color.White
             )
 
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(1.dp))
 
             TextButton(onClick = onNavigateToSignUp) {
                 Text(

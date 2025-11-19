@@ -1,4 +1,4 @@
-package com.example.demo.feature.auth
+package com.example.demo.feature.auth.login
 
 import kotlinx. coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
