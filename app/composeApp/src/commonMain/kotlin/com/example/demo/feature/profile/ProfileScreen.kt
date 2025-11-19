@@ -2,8 +2,10 @@ package com.example.demo.feature.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,44 +19,41 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
-import kotlinx.coroutines.flow.collectAsState
 
 @Composable
 fun ProfileRoute(
-    viewModel: ProfileViewModel = remember { ProfileViewModel() }
+    viewModel: ProfileViewModel = remember { ProfileViewModel() },
+    modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-
-    ProfileScreen(state = state)
+    ProfileScreen(
+        state = state,
+        modifier = modifier
+    )
 }
 
 @Composable
 fun ProfileScreen(
-    state: ProfileUiState
+    state: ProfileUiState,
+    modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        bottomBar = { ProfileBottomNav() },
-        containerColor = Color(0xFFF5F5F7) // light background
-    ) { padding ->
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        ProfileHeader(state)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            ProfileHeader(state)
-
-            // Body is scrollable if this grows later
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatsCard(state)
-                VerifiedCard()
-                VehiclesCard(state)
-                SettingsCard()
-            }
+            StatsCard(state)
+            VerifiedCard()
+            VehiclesCard(state)
+            SettingsCard()
         }
     }
 }
@@ -330,35 +329,3 @@ private fun SettingsRow(
     }
 }
 
-@Composable
-private fun ProfileBottomNav() {
-    NavigationBar(
-        containerColor = Color.White,
-        tonalElevation = 4.dp
-    ) {
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO: hook up */ },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Default.CalendarToday, contentDescription = "My Rides") },
-            label = { Text("My Rides") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Messages") },
-            label = { Text("Messages") }
-        )
-        NavigationBarItem(
-            selected = true,
-            onClick = { /* already here */ },
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") }
-        )
-    }
-}
