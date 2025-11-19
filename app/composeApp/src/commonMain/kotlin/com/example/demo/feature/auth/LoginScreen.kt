@@ -15,22 +15,26 @@ import com.example.demo.ui.theme.DrexelGold
 // ---------- Route (wires ViewModel to UI) ----------
 @Composable
 fun LoginRoute(
-    viewModel: LoginViewModel = remember { LoginViewModel() }
+    viewModel: LoginViewModel = remember { LoginViewModel() },
+    onNavigateToSignUp: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     LoginScreen(
         state = state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        onNavigateToSignUp = onNavigateToSignUp
     )
 }
+
 
 // ---------- Stateless UI screen ----------
 
 @Composable
 fun LoginScreen(
     state: LoginUiState,
-    onEvent: (LoginEvent) -> Unit
+    onEvent: (LoginEvent) -> Unit,
+    onNavigateToSignUp: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -135,7 +139,7 @@ fun LoginScreen(
 
             Spacer(Modifier.height(4.dp))
 
-            TextButton(onClick = { onEvent(LoginEvent.SignUp) }) {
+            TextButton(onClick = onNavigateToSignUp) {
                 Text(
                     text = "Sign up now",
                     style = MaterialTheme.typography.bodyMedium,
