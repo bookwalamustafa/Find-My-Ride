@@ -44,7 +44,7 @@ class SignUpViewModel {
 
         // sign up api later add form Drexel
         _uiState.value = current.copy(
-            isLoading = true,
+            isLoading = false,
             errorMessage = null
         )
     }
