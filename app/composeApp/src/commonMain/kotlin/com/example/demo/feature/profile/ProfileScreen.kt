@@ -1,6 +1,7 @@
 package com.example.demo.feature.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +29,7 @@ fun ProfileRoute(
     val state by viewModel.uiState.collectAsState()
     ProfileScreen(
         state = state,
+        onEvent = viewModel::onEvent,
         modifier = modifier
     )
 }
@@ -35,12 +37,11 @@ fun ProfileRoute(
 @Composable
 fun ProfileScreen(
     state: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+        modifier = modifier.fillMaxSize()
     ) {
         ProfileHeader(state)
 
@@ -52,11 +53,16 @@ fun ProfileScreen(
         ) {
             StatsCard(state)
             VerifiedCard()
-            VehiclesCard(state)
+            VehiclesCard(state, onEvent)
             SettingsCard()
+        }
+
+        if (state.isVehicleDialogOpen) {
+            VehicleEditDialog(state, onEvent)
         }
     }
 }
+
 
 @Composable
 private fun ProfileHeader(state: ProfileUiState) {
@@ -211,7 +217,10 @@ private fun VerifiedCard() {
 }
 
 @Composable
-private fun VehiclesCard(state: ProfileUiState) {
+private fun VehiclesCard(
+    state: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -236,7 +245,12 @@ private fun VehiclesCard(state: ProfileUiState) {
 
             state.vehicles.forEach { vehicle ->
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .clickable {
+                            onEvent(ProfileEvent.VehicleClicked(vehicle.id))
+                        },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F6FF)),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -329,3 +343,37 @@ private fun SettingsRow(
     }
 }
 
+@Composable
+private fun VehicleEditDialog(
+    state: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onEvent(ProfileEvent.VehicleDialogDismissed) },
+        confirmButton = {
+            TextButton(onClick = { onEvent(ProfileEvent.SaveVehicleChanges) }) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onEvent(ProfileEvent.VehicleDialogDismissed) }) {
+                Text("Cancel")
+            }
+        },
+        title = { Text("Edit Vehicle") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = state.editingVehicleName,
+                    onValueChange = { onEvent(ProfileEvent.EditVehicleNameChanged(it)) },
+                    label = { Text("Vehicle name") }
+                )
+                OutlinedTextField(
+                    value = state.editingVehicleDetails,
+                    onValueChange = { onEvent(ProfileEvent.EditVehicleDetailsChanged(it)) },
+                    label = { Text("Color & plate") }
+                )
+            }
+        }
+    )
+}

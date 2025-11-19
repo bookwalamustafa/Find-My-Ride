@@ -1,3 +1,9 @@
 package com.example.demo.feature.profile
 
-// Dont need right now as this just for display ATM but if we add interactions do it through here
+sealed interface ProfileEvent {
+    data class  VehicleClicked(val vehicleId: Int) : ProfileEvent
+    data object VehicleDialogDismissed : ProfileEvent
+    data class EditVehicleNameChanged(val value: String) : ProfileEvent
+    data class EditVehicleDetailsChanged(val value: String) : ProfileEvent
+    data object SaveVehicleChanges : ProfileEvent
+}
