@@ -22,23 +22,56 @@ import androidx.compose.ui.window.Dialog
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
+enum class ProfilePage {
+    Overview,
+    AccountSettings,
+    Preferences,
+    PrivacySafety
+}
+
 @Composable
 fun ProfileRoute(
     viewModel: ProfileViewModel = remember { ProfileViewModel() },
     modifier: Modifier = Modifier
 ) {
+    var currentPage by remember { mutableStateOf(ProfilePage.Overview) }
     val state by viewModel.uiState.collectAsState()
-    ProfileScreen(
-        state = state,
-        onEvent = viewModel::onEvent,
-        modifier = modifier
-    )
+
+    when (currentPage) {
+        ProfilePage.Overview -> ProfileScreen(
+            state = state,
+            onEvent = viewModel::onEvent,
+            onAccountSettingsClick = { currentPage = ProfilePage.AccountSettings },
+            onPreferencesClick = { currentPage = ProfilePage.Preferences },
+            onPrivacySafetyClick = { currentPage = ProfilePage.PrivacySafety },
+            modifier = modifier
+        )
+
+        ProfilePage.AccountSettings -> AccountSettingsScreen(
+            modifier = modifier,
+            onBack = { currentPage = ProfilePage.Overview }
+        )
+
+        ProfilePage.Preferences -> PreferencesScreen(
+            modifier = modifier,
+            onBack = { currentPage = ProfilePage.Overview }
+        )
+
+        ProfilePage.PrivacySafety -> PrivacySafetyScreen(
+            modifier = modifier,
+            onBack = { currentPage = ProfilePage.Overview }
+        )
+    }
 }
+
 
 @Composable
 fun ProfileScreen(
     state: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit,
+    onAccountSettingsClick: () -> Unit,
+    onPreferencesClick: () -> Unit,
+    onPrivacySafetyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -55,7 +88,11 @@ fun ProfileScreen(
             StatsCard(state)
             VerifiedCard()
             VehiclesCard(state, onEvent)
-            SettingsCard(onEvent)
+            SettingsCard(
+                onAccountSettingsClick = onAccountSettingsClick,
+                onPreferencesClick = onPreferencesClick,
+                onPrivacySafetyClick = onPrivacySafetyClick
+            )
         }
     }
 
@@ -300,7 +337,9 @@ private fun VehiclesCard(
 
 @Composable
 private fun SettingsCard(
-    onEvent: (ProfileEvent) -> Unit
+    onAccountSettingsClick: () -> Unit,
+    onPreferencesClick: () -> Unit,
+    onPrivacySafetyClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -315,17 +354,17 @@ private fun SettingsCard(
             SettingsRow(
                 icon = Icons.Default.Settings,
                 label = "Account Settings",
-                onClick = { onEvent(ProfileEvent.SettingsClicked(SettingsOption.AccountSetting)) }
+                onClick = onAccountSettingsClick
             )
             SettingsRow(
                 icon = Icons.Default.Tune,
                 label = "Preferences",
-                onClick = { onEvent(ProfileEvent.SettingsClicked(SettingsOption.Preferences)) }
+                onClick = onPreferencesClick
             )
             SettingsRow(
                 icon = Icons.Default.Shield,
                 label = "Privacy & Safety",
-                onClick = { onEvent(ProfileEvent.SettingsClicked(SettingsOption.PrivacySetting))}
+                onClick = onPrivacySafetyClick
             )
         }
     }
