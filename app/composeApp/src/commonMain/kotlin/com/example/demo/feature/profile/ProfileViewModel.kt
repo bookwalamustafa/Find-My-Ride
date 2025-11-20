@@ -60,6 +60,20 @@ class ProfileViewModel {
                 updateEdit { it.copy(funFact = event.value) }
 
             ProfileEvent.SaveVehicleChanges -> saveVehicle()
+
+            is ProfileEvent.SettingsClicked -> {
+                _uiState.value = _uiState.value.copy(
+                    isSettingsDialogOpen = true,
+                    selectedSettingsOption = event.option
+                )
+            }
+
+            ProfileEvent.SettingsDialogDismissed -> {
+                _uiState.value = _uiState.value.copy(
+                    isSettingsDialogOpen = false,
+                    selectedSettingsOption = null
+                )
+            }
         }
     }
 

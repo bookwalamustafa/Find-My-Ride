@@ -55,7 +55,7 @@ fun ProfileScreen(
             StatsCard(state)
             VerifiedCard()
             VehiclesCard(state, onEvent)
-            SettingsCard()
+            SettingsCard(onEvent)
         }
     }
 
@@ -299,7 +299,9 @@ private fun VehiclesCard(
 
 
 @Composable
-private fun SettingsCard() {
+private fun SettingsCard(
+    onEvent: (ProfileEvent) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -312,15 +314,18 @@ private fun SettingsCard() {
 
             SettingsRow(
                 icon = Icons.Default.Settings,
-                label = "Account Settings"
+                label = "Account Settings",
+                onClick = { onEvent(ProfileEvent.SettingsClicked(SettingsOption.AccountSetting)) }
             )
             SettingsRow(
                 icon = Icons.Default.Tune,
-                label = "Preferences"
+                label = "Preferences",
+                onClick = { onEvent(ProfileEvent.SettingsClicked(SettingsOption.Preferences)) }
             )
             SettingsRow(
                 icon = Icons.Default.Shield,
-                label = "Privacy & Safety"
+                label = "Privacy & Safety",
+                onClick = { onEvent(ProfileEvent.SettingsClicked(SettingsOption.PrivacySetting))}
             )
         }
     }
@@ -329,12 +334,14 @@ private fun SettingsCard() {
 @Composable
 private fun SettingsRow(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String
+    label: String,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -469,3 +476,104 @@ fun VehicleEditDialog(
         }
     }
 }
+
+@Composable
+private fun SettingsDialog(
+    state: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit
+) {
+    val option = state.selectedSettingsOption ?: return
+
+    val title = when (option) {
+        SettingsOption.AccountSetting -> "Account Settings"
+        SettingsOption.Preferences -> "Preferences"
+        SettingsOption.PrivacySetting -> "Privacy & Safety"
+    }
+
+    Dialog(onDismissRequest = { onEvent(ProfileEvent.SettingsDialogDismissed) }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White)
+        ) {
+            Column (modifier = Modifier.fillMaxWidth()) {
+
+                // header
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(DrexelBlue)
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = title,
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "This is where $title options will go.",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "You can later replace this pop up with a full screen.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(
+                        onClick = { onEvent(ProfileEvent.SettingsDialogDismissed) }
+                    ) {
+                        Text("Close", color = DrexelBlue)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

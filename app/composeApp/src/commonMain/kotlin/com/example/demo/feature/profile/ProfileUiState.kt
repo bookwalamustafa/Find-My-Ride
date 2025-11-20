@@ -47,6 +47,8 @@ data class ProfileUiState(
             funFact = "First EV on campus"
         )
     ),
+    val isSettingsDialogOpen: Boolean = false,
+    val selectedSettingsOption: SettingsOption? = null,
 
     // dialog / editing state
     val isVehicleDialogOpen: Boolean = false,
