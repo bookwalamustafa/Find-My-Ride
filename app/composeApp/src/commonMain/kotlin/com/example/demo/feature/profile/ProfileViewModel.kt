@@ -85,6 +85,16 @@ class ProfileViewModel {
                 )
             }
 
+            is ProfileEvent.DeleteVehicleClicked -> {
+                val edit = _uiState.value.vehicleEdit
+                val id = edit.id ?: return // only valid when editing
+
+                _uiState.value = _uiState.value.copy(
+                    vehicles = _uiState.value.vehicles.filterNot { it.id == id },
+                    isVehicleDialogOpen = false,
+                    vehicleEdit = VehicleEditState()
+                )
+            }
             ProfileEvent.SettingsDialogDismissed -> {
                 _uiState.value = _uiState.value.copy(
                     isSettingsDialogOpen = false,

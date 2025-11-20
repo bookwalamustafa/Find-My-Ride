@@ -1,5 +1,6 @@
 package com.example.demo.feature.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -411,6 +412,7 @@ fun VehicleEditDialog(
     onEvent: (ProfileEvent) -> Unit
 ) {
     val edit = state.vehicleEdit
+    val isEditing = edit.id != null
 
     Dialog(onDismissRequest = { onEvent(ProfileEvent.VehicleDialogDismissed) }) {
         Box(
@@ -433,12 +435,13 @@ fun VehicleEditDialog(
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Edit Vehicle",
+                        text = if (isEditing) "Edit Vehicle" else "Add Vehicle",
                         color = Color.White,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
 
+                // Form fields
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -494,18 +497,37 @@ fun VehicleEditDialog(
                     )
                 }
 
+                // Buttons (Delete + Cancel + Save)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.End
+                        .padding(15.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+
+                    // Only show Delete when editing an existing car
+                    if (isEditing) {
+                        OutlinedButton(
+                            onClick = { onEvent(ProfileEvent.DeleteVehicleClicked) },
+                            border = BorderStroke(1.dp, Color.Red),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color.Red
+                            )
+                        ) {
+                            Text("Delete")
+                        }
+                    }
+
+                    Spacer(Modifier.weight(1f))
+
                     TextButton(
                         onClick = { onEvent(ProfileEvent.VehicleDialogDismissed) }
                     ) {
                         Text("Cancel", color = DrexelBlue)
                     }
+
                     Spacer(Modifier.width(8.dp))
+
                     Button(
                         onClick = { onEvent(ProfileEvent.SaveVehicleChanges) },
                         colors = ButtonDefaults.buttonColors(
@@ -521,6 +543,7 @@ fun VehicleEditDialog(
         }
     }
 }
+
 
 @Composable
 private fun SettingsDialog(

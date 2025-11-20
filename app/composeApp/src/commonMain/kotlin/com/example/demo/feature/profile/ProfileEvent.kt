@@ -18,7 +18,10 @@ sealed interface ProfileEvent {
     data class VehicleEditYearChanged(val value: String) : ProfileEvent
     data class VehicleEditFunFactChanged(val value: String) : ProfileEvent
     data object AddVehicleClicked : ProfileEvent
+    data object DeleteVehicleClicked : ProfileEvent
     data object SaveVehicleChanges : ProfileEvent
+
+
 
     // Settings
     data class SettingsClicked(val option: SettingsOption) : ProfileEvent
