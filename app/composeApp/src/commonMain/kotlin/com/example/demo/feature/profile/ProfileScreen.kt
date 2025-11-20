@@ -57,10 +57,10 @@ fun ProfileScreen(
             VehiclesCard(state, onEvent)
             SettingsCard()
         }
+    }
 
-        if (state.isVehicleDialogOpen) {
-            VehicleEditDialog(state, onEvent)
-        }
+    if (state.isVehicleDialogOpen) {
+        VehicleEditDialog(state, onEvent)
     }
 }
 
@@ -270,9 +270,17 @@ private fun VehiclesCard(
                         )
                         Spacer(Modifier.width(12.dp))
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(vehicle.name, fontWeight = FontWeight.SemiBold)
                             Text(
-                                vehicle.colorAndPlate,
+                                "${vehicle.make} ${vehicle.model}",
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                "${vehicle.color} · ${vehicle.plate}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.Gray
+                            )
+                            Text(
+                                "${vehicle.seatsTotal} seats · ${vehicle.year}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.Gray
                             )
@@ -288,6 +296,7 @@ private fun VehiclesCard(
         }
     }
 }
+
 
 @Composable
 private fun SettingsCard() {
@@ -349,6 +358,8 @@ fun VehicleEditDialog(
     state: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit
 ) {
+    val edit = state.vehicleEdit
+
     Dialog(onDismissRequest = { onEvent(ProfileEvent.VehicleDialogDismissed) }) {
         Box(
             modifier = Modifier
@@ -358,11 +369,10 @@ fun VehicleEditDialog(
                 .background(Color.White)
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
 
-                // --------- TITLE BAR (DREXEL BLUE) --------- //
+                // Header
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -377,54 +387,73 @@ fun VehicleEditDialog(
                     )
                 }
 
-                // --------- CONTENT --------- //
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-
                     OutlinedTextField(
-                        value = state.editingVehicleName,
-                        onValueChange = { onEvent(ProfileEvent.EditVehicleNameChanged(it)) },
-                        label = { Text("Vehicle Name") },
+                        value = edit.make,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditMakeChanged(it)) },
+                        label = { Text("Make") },
                         shape = RoundedCornerShape(10.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = DrexelBlue,
-                            unfocusedBorderColor = Color.Gray
-                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     OutlinedTextField(
-                        value = state.editingVehicleDetails,
-                        onValueChange = { onEvent(ProfileEvent.EditVehicleDetailsChanged(it)) },
-                        label = { Text("Color & Plate") },
+                        value = edit.model,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditModelChanged(it)) },
+                        label = { Text("Model") },
                         shape = RoundedCornerShape(10.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = DrexelBlue,
-                            unfocusedBorderColor = Color.Gray
-                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = edit.color,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditColorChanged(it)) },
+                        label = { Text("Color") },
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = edit.plate,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditPlateChanged(it)) },
+                        label = { Text("Plate") },
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = edit.seatsTotal,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditSeatsChanged(it)) },
+                        label = { Text("Seats (total)") },
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = edit.year,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditYearChanged(it)) },
+                        label = { Text("Year") },
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = edit.funFact,
+                        onValueChange = { onEvent(ProfileEvent.VehicleEditFunFactChanged(it)) },
+                        label = { Text("Fun fact about this car") },
+                        shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
 
-                // --------- ACTION BUTTONS --------- //
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-
                     TextButton(
                         onClick = { onEvent(ProfileEvent.VehicleDialogDismissed) }
                     ) {
                         Text("Cancel", color = DrexelBlue)
                     }
-
                     Spacer(Modifier.width(8.dp))
-
                     Button(
                         onClick = { onEvent(ProfileEvent.SaveVehicleChanges) },
                         colors = ButtonDefaults.buttonColors(

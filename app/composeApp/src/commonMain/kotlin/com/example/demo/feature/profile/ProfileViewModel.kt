@@ -10,59 +10,93 @@ class ProfileViewModel {
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
+
             is ProfileEvent.VehicleClicked -> {
                 val vehicle = _uiState.value.vehicles.firstOrNull { it.id == event.vehicleId }
                     ?: return
+
                 _uiState.value = _uiState.value.copy(
                     isVehicleDialogOpen = true,
-                    editingVehicleId = vehicle.id,
-                    editingVehicleName = vehicle.name,
-                    editingVehicleDetails = vehicle.colorAndPlate
+                    vehicleEdit = VehicleEditState(
+                        id = vehicle.id,
+                        ownerUserId = vehicle.ownerUserId,
+                        make = vehicle.make,
+                        model = vehicle.model,
+                        color = vehicle.color,
+                        plate = vehicle.plate,
+                        seatsTotal = vehicle.seatsTotal.toString(),
+                        year = vehicle.year.toString(),
+                        funFact = vehicle.funFact
+                    )
                 )
             }
 
             ProfileEvent.VehicleDialogDismissed -> {
                 _uiState.value = _uiState.value.copy(
                     isVehicleDialogOpen = false,
-                    editingVehicleId = null,
-                    editingVehicleName = "",
-                    editingVehicleDetails = ""
+                    vehicleEdit = VehicleEditState()
                 )
             }
 
-            is ProfileEvent.EditVehicleNameChanged -> {
-                _uiState.value = _uiState.value.copy(
-                    editingVehicleName = event.value
-                )
-            }
+            is ProfileEvent.VehicleEditMakeChanged ->
+                updateEdit { it.copy(make = event.value) }
 
-            is ProfileEvent.EditVehicleDetailsChanged -> {
-                _uiState.value = _uiState.value.copy(
-                    editingVehicleDetails = event.value
-                )
-            }
+            is ProfileEvent.VehicleEditModelChanged ->
+                updateEdit { it.copy(model = event.value) }
 
-            ProfileEvent.SaveVehicleChanges -> {
-                val state = _uiState.value
-                val id = state.editingVehicleId ?: return
+            is ProfileEvent.VehicleEditColorChanged ->
+                updateEdit { it.copy(color = event.value) }
 
-                val updatedVehicles = state.vehicles.map { v ->
-                    if (v.id == id) {
-                        v.copy(
-                            name = state.editingVehicleName,
-                            colorAndPlate = state.editingVehicleDetails
-                        )
-                    } else v
-                }
+            is ProfileEvent.VehicleEditPlateChanged ->
+                updateEdit { it.copy(plate = event.value) }
 
-                _uiState.value = state.copy(
-                    vehicles = updatedVehicles,
-                    isVehicleDialogOpen = false,
-                    editingVehicleId = null,
-                    editingVehicleName = "",
-                    editingVehicleDetails = ""
-                )
-            }
+            is ProfileEvent.VehicleEditSeatsChanged ->
+                updateEdit { it.copy(seatsTotal = event.value) }
+
+            is ProfileEvent.VehicleEditYearChanged ->
+                updateEdit { it.copy(year = event.value) }
+
+            is ProfileEvent.VehicleEditFunFactChanged ->
+                updateEdit { it.copy(funFact = event.value) }
+
+            ProfileEvent.SaveVehicleChanges -> saveVehicle()
         }
+    }
+
+    private fun updateEdit(transform: (VehicleEditState) -> VehicleEditState) {
+        _uiState.value = _uiState.value.copy(
+            vehicleEdit = transform(_uiState.value.vehicleEdit)
+        )
+    }
+
+    private fun saveVehicle() {
+        val state = _uiState.value
+        val edit = state.vehicleEdit
+        val id = edit.id ?: return
+
+        val seats = edit.seatsTotal.toIntOrNull() ?: 0
+        val year = edit.year.toIntOrNull() ?: 0
+
+        val updatedVehicles = state.vehicles.map { v ->
+            if (v.id == id) {
+                v.copy(
+                    make = edit.make,
+                    model = edit.model,
+                    color = edit.color,
+                    plate = edit.plate,
+                    seatsTotal = seats,
+                    year = year,
+                    funFact = edit.funFact
+                )
+            } else v
+        }
+
+        _uiState.value = state.copy(
+            vehicles = updatedVehicles,
+            isVehicleDialogOpen = false,
+            vehicleEdit = VehicleEditState()
+        )
+
+        // later: also push this change to your SQLite DB here
     }
 }

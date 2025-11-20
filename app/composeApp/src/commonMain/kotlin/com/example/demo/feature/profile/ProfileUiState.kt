@@ -2,8 +2,27 @@ package com.example.demo.feature.profile
 
 data class VehicleUi(
     val id: Int,
-    val name: String,
-    val colorAndPlate: String
+    val ownerUserId: Int,
+    val make: String,
+    val model: String,
+    val color: String,
+    val plate: String,
+    val seatsTotal: Int,
+    val year: Int,
+    val funFact: String
+)
+
+// Used only while editing in the dialog
+data class VehicleEditState(
+    val id: Int? = null,
+    val ownerUserId: Int? = null,
+    val make: String = "",
+    val model: String = "",
+    val color: String = "",
+    val plate: String = "",
+    val seatsTotal: String = "",   // keep as String for text field
+    val year: String = "",
+    val funFact: String = ""
 )
 
 data class ProfileUiState(
@@ -18,14 +37,18 @@ data class ProfileUiState(
     val vehicles: List<VehicleUi> = listOf(
         VehicleUi(
             id = 1,
-            name = "Tesla Model Y",
-            colorAndPlate = "Blue · ABC-1234"
+            ownerUserId = 42, // placeholder
+            make = "Tesla",
+            model = "Model Y",
+            color = "Blue",
+            plate = "ABC-1234",
+            seatsTotal = 5,
+            year = 2022,
+            funFact = "First EV on campus"
         )
     ),
 
-    // dialog editing state
+    // dialog / editing state
     val isVehicleDialogOpen: Boolean = false,
-    val editingVehicleId: Int? = null,
-    val editingVehicleName: String = "",
-    val editingVehicleDetails: String = "",
+    val vehicleEdit: VehicleEditState = VehicleEditState()
 )
