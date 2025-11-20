@@ -68,6 +68,23 @@ class ProfileViewModel {
                 )
             }
 
+            is ProfileEvent.AddVehicleClicked -> {
+                _uiState.value = _uiState.value.copy(
+                    isVehicleDialogOpen = true,
+                    vehicleEdit = VehicleEditState( // empty files = add more
+                        id = null,
+                        ownerUserId = 1, // or current user id later
+                        make = "",
+                        model = "",
+                        color = "",
+                        plate = "",
+                        seatsTotal = "",
+                        year = "",
+                        funFact = "",
+                    )
+                )
+            }
+
             ProfileEvent.SettingsDialogDismissed -> {
                 _uiState.value = _uiState.value.copy(
                     isSettingsDialogOpen = false,
@@ -86,23 +103,40 @@ class ProfileViewModel {
     private fun saveVehicle() {
         val state = _uiState.value
         val edit = state.vehicleEdit
-        val id = edit.id ?: return
 
         val seats = edit.seatsTotal.toIntOrNull() ?: 0
         val year = edit.year.toIntOrNull() ?: 0
 
-        val updatedVehicles = state.vehicles.map { v ->
-            if (v.id == id) {
-                v.copy(
-                    make = edit.make,
-                    model = edit.model,
-                    color = edit.color,
-                    plate = edit.plate,
-                    seatsTotal = seats,
-                    year = year,
-                    funFact = edit.funFact
-                )
-            } else v
+        val updatedVehicles = if (edit.id == null) {
+            // ---------- ADD NEW VEHICLE ---------- //
+            val newId = (state.vehicles.maxOfOrNull { it.id } ?: 0) + 1
+
+            state.vehicles + VehicleUi(
+                id = newId,
+                ownerUserId = edit.ownerUserId ?: 1,
+                make = edit.make,
+                model = edit.model,
+                color = edit.color,
+                plate = edit.plate,
+                seatsTotal = seats,
+                year = year,
+                funFact = edit.funFact
+            )
+        } else {
+            // ---------- EDIT EXISTING VEHICLE ---------- //
+            state.vehicles.map { v ->
+                if (v.id == edit.id) {
+                    v.copy(
+                        make = edit.make,
+                        model = edit.model,
+                        color = edit.color,
+                        plate = edit.plate,
+                        seatsTotal = seats,
+                        year = year,
+                        funFact = edit.funFact
+                    )
+                } else v
+            }
         }
 
         _uiState.value = state.copy(
@@ -110,7 +144,6 @@ class ProfileViewModel {
             isVehicleDialogOpen = false,
             vehicleEdit = VehicleEditState()
         )
-
-        // later: also push this change to your SQLite DB here
     }
+
 }

@@ -272,11 +272,17 @@ private fun VehiclesCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("My Vehicles", fontWeight = FontWeight.SemiBold)
-                Text(
-                    text = "+ Add",
-                    color = DrexelGold,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+
+                TextButton(
+                    onClick = { onEvent(ProfileEvent.AddVehicleClicked) },
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = "+ Add",
+                        color = DrexelGold,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
 
             Spacer(Modifier.height(12.dp))
