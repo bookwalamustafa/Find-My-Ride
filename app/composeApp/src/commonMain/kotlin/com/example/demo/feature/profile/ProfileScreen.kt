@@ -57,8 +57,19 @@ fun ProfileRoute(
         )
 
         ProfilePage.Preferences -> PreferencesScreen(
-            modifier = modifier,
-            onBack = { currentPage = ProfilePage.Overview }
+            prefs = state.preferences,
+            onChange = { newPrefs ->
+                viewModel.onEvent(
+                    ProfileEvent.PreferencesChanged(
+                        notificationsEnabled = newPrefs.notificationsEnabled,
+                        emailUpdatesEnabled = newPrefs.emailUpdatesEnabled,
+                        darkModeEnabled = newPrefs.darkModeEnabled
+                    )
+                )
+            },
+            onSave = { viewModel.onEvent(ProfileEvent.SavePreferences) },
+            onBack = { currentPage = ProfilePage.Overview },
+            modifier = modifier
         )
 
         ProfilePage.PrivacySafety -> PrivacySafetyScreen(

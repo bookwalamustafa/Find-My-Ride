@@ -8,24 +8,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.demo.feature.profile.PreferencesState
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreferencesScreen(
-    modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    prefs: PreferencesState,
+    onChange: (PreferencesState) -> Unit,
+    onSave: () -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    // Local state so switches actually toggle
-    var notificationsEnabled by remember { mutableStateOf(true) }
-    var emailUpdatesEnabled by remember { mutableStateOf(false) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,15 +65,23 @@ fun PreferencesScreen(
             PreferenceSwitchRow(
                 title = "Push notifications",
                 subtitle = "Get alerts about upcoming rides and messages",
-                checked = notificationsEnabled,
-                onCheckedChange = { notificationsEnabled = it }
+                checked = prefs.notificationsEnabled,
+                onCheckedChange = {
+                    onChange(
+                        prefs.copy(notificationsEnabled = it)
+                    )
+                }
             )
 
             PreferenceSwitchRow(
                 title = "Email updates",
                 subtitle = "Receive trip summaries and announcements",
-                checked = emailUpdatesEnabled,
-                onCheckedChange = { emailUpdatesEnabled = it }
+                checked = prefs.emailUpdatesEnabled,
+                onCheckedChange = {
+                    onChange(
+                        prefs.copy(emailUpdatesEnabled = it)
+                    )
+                }
             )
 
             Spacer(Modifier.height(16.dp))
@@ -88,17 +95,18 @@ fun PreferencesScreen(
             PreferenceSwitchRow(
                 title = "Dark mode",
                 subtitle = "Use a darker color scheme at night",
-                checked = darkModeEnabled,
-                onCheckedChange = { darkModeEnabled = it }
+                checked = prefs.darkModeEnabled,
+                onCheckedChange = {
+                    onChange(
+                        prefs.copy(darkModeEnabled = it)
+                    )
+                }
             )
 
             Spacer(Modifier.height(24.dp))
 
             Button(
-                onClick = {
-                    // TODO: hook up to ViewModel / save to data store later
-                    // e.g. onEvent(ProfileEvent.PreferencesSaved(...))
-                },
+                onClick = onSave,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = DrexelGold,
@@ -118,7 +126,6 @@ fun PreferenceSwitchRow(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    // Drexel-styled switch colors
     val switchColors = SwitchDefaults.colors(
         checkedThumbColor = Color.White,
         checkedTrackColor = DrexelBlue,

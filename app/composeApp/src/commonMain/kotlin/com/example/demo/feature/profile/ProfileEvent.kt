@@ -23,7 +23,7 @@ sealed interface ProfileEvent {
 
 
     data class PreferencesChanged(
-        val notificationEnabled: Boolean,
+        val notificationsEnabled: Boolean,
         val emailUpdatesEnabled: Boolean,
         val darkModeEnabled: Boolean,
     ) : ProfileEvent

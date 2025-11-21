@@ -105,7 +105,7 @@ class ProfileViewModel {
             is ProfileEvent.PreferencesChanged -> {
                 _uiState.value = _uiState.value.copy(
                     preferences = _uiState.value.preferences.copy(
-                        notificationEnabled = event.notificationEnabled,
+                        notificationsEnabled = event.notificationsEnabled,
                         emailUpdatesEnabled = event.emailUpdatesEnabled,
                         darkModeEnabled = event.darkModeEnabled
                     )

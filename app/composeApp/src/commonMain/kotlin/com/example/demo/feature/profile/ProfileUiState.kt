@@ -58,7 +58,7 @@ data class ProfileUiState(
 
 
 data class PreferencesState(
-    val notificationEnabled: Boolean = true,
+    val notificationsEnabled: Boolean = true,
     val emailUpdatesEnabled: Boolean = false,
     val darkModeEnabled: Boolean = false,
 )
