@@ -55,6 +55,7 @@ data class ProfileUiState(
     val vehicleEdit: VehicleEditState = VehicleEditState(),
     val preferences: PreferencesState = PreferencesState(),
     val account: AccountSettingsState = AccountSettingsState(),
+    val privacy: PrivacySafetyState = PrivacySafetyState(),
 )
 
 
@@ -70,3 +71,11 @@ data class AccountSettingsState(
     val phone: String = "0123456789",
     val password: String = "*******",
 )
+
+data class PrivacySafetyState(
+    val showProfilePublicly: Boolean = true,
+    val allowMessagesFromNonContacts: Boolean = true,
+    val shareTripHistoryWithFriends: Boolean = false,
+    val twoFactorEnabled: Boolean = false
+)
+

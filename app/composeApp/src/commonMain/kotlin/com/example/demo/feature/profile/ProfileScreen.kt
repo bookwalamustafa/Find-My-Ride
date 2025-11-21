@@ -84,9 +84,22 @@ fun ProfileRoute(
         )
 
         ProfilePage.PrivacySafety -> PrivacySafetyScreen(
-            modifier = modifier,
-            onBack = { currentPage = ProfilePage.Overview }
+            state = state.privacy,
+            onChange = { updated ->
+                viewModel.onEvent(
+                    ProfileEvent.PrivacySafetyChanged(
+                        showProfilePublicly = updated.showProfilePublicly,
+                        allowMessagesFromNonContacts = updated.allowMessagesFromNonContacts,
+                        shareTripHistoryWithFriends = updated.shareTripHistoryWithFriends,
+                        twoFactorEnabled = updated.twoFactorEnabled
+                    )
+                )
+            },
+            onSave = { viewModel.onEvent(ProfileEvent.SavePrivacySafety) },
+            onBack = { currentPage = ProfilePage.Overview },
+            modifier = modifier
         )
+
     }
 }
 

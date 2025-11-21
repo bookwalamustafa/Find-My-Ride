@@ -3,9 +3,14 @@ package com.example.demo.feature.profile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class ProfileViewModel {
+import com.example.demo.feature.profile.data.InMemoryProfileRepository
+import com.example.demo.feature.profile.data.ProfileRepository
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
+class ProfileViewModel(
+    private val repository: ProfileRepository = InMemoryProfileRepository()
+) {
+
+    private val _uiState = MutableStateFlow(repository.loadInitialProfile())
     val uiState: StateFlow<ProfileUiState> = _uiState
 
     fun onEvent(event: ProfileEvent) {
@@ -59,21 +64,17 @@ class ProfileViewModel {
             is ProfileEvent.VehicleEditFunFactChanged ->
                 updateEdit { it.copy(funFact = event.value) }
 
-            ProfileEvent.SaveVehicleChanges -> saveVehicle()
-
-            is ProfileEvent.SettingsClicked -> {
-                _uiState.value = _uiState.value.copy(
-                    isSettingsDialogOpen = true,
-                    selectedSettingsOption = event.option
-                )
+            ProfileEvent.SaveVehicleChanges -> {
+                saveVehicle()
+                persist()          // save to repo
             }
 
             is ProfileEvent.AddVehicleClicked -> {
                 _uiState.value = _uiState.value.copy(
                     isVehicleDialogOpen = true,
-                    vehicleEdit = VehicleEditState( // empty files = add more
+                    vehicleEdit = VehicleEditState(
                         id = null,
-                        ownerUserId = 1, // or current user id later
+                        ownerUserId = 1, // TODO: replace with real user id later
                         make = "",
                         model = "",
                         color = "",
@@ -87,20 +88,31 @@ class ProfileViewModel {
 
             is ProfileEvent.DeleteVehicleClicked -> {
                 val edit = _uiState.value.vehicleEdit
-                val id = edit.id ?: return // only valid when editing
+                val id = edit.id ?: return
 
                 _uiState.value = _uiState.value.copy(
                     vehicles = _uiState.value.vehicles.filterNot { it.id == id },
                     isVehicleDialogOpen = false,
                     vehicleEdit = VehicleEditState()
                 )
+                persist()          // save to repo
             }
+
+            is ProfileEvent.SettingsClicked -> {
+                _uiState.value = _uiState.value.copy(
+                    isSettingsDialogOpen = true,
+                    selectedSettingsOption = event.option
+                )
+            }
+
             ProfileEvent.SettingsDialogDismissed -> {
                 _uiState.value = _uiState.value.copy(
                     isSettingsDialogOpen = false,
                     selectedSettingsOption = null
                 )
             }
+
+            // ---------- Preferences ----------
 
             is ProfileEvent.PreferencesChanged -> {
                 _uiState.value = _uiState.value.copy(
@@ -114,8 +126,10 @@ class ProfileViewModel {
 
             ProfileEvent.SavePreferences -> {
                 println("Preferences saved: ${_uiState.value.preferences}")
+                persist()          // save to repo
             }
 
+            // ---------- Account Settings ----------
 
             is ProfileEvent.AccountSettingsChanged -> {
                 val current = _uiState.value.account
@@ -124,22 +138,39 @@ class ProfileViewModel {
                         fullName = event.fullName ?: current.fullName,
                         email = event.email ?: current.email,
                         phone = event.phone ?: current.phone,
-                        password = event.password ?: current.password,
+                        password = event.password ?: current.password
                     )
                 )
             }
 
             ProfileEvent.SaveAccountSettings -> {
                 println("ACCOUNT UPDATED: ${_uiState.value.account}")
-                // future write to db
+                persist()          // save to repo
             }
 
             ProfileEvent.DeleteAccount -> {
-                println("DELETE ACCOUNT SETTINGS: ${_uiState.value.account}")
-                // future delete from db
+                println("ACCOUNT DELETED (TODO: real delete + logout)")
+                // You might later clear profile / navigate away etc.
+                persist()          // still log/save current state
             }
 
+            // ---------- Privacy & Safety ----------
 
+            is ProfileEvent.PrivacySafetyChanged -> {
+                _uiState.value = _uiState.value.copy(
+                    privacy = _uiState.value.privacy.copy(
+                        showProfilePublicly = event.showProfilePublicly,
+                        allowMessagesFromNonContacts = event.allowMessagesFromNonContacts,
+                        shareTripHistoryWithFriends = event.shareTripHistoryWithFriends,
+                        twoFactorEnabled = event.twoFactorEnabled
+                    )
+                )
+            }
+
+            ProfileEvent.SavePrivacySafety -> {
+                println("Privacy & Safety saved: ${_uiState.value.privacy}")
+                persist()          // save to repo
+            }
         }
     }
 
@@ -157,7 +188,6 @@ class ProfileViewModel {
         val year = edit.year.toIntOrNull() ?: 0
 
         val updatedVehicles = if (edit.id == null) {
-            // ---------- ADD NEW VEHICLE ---------- //
             val newId = (state.vehicles.maxOfOrNull { it.id } ?: 0) + 1
 
             state.vehicles + VehicleUi(
@@ -172,7 +202,6 @@ class ProfileViewModel {
                 funFact = edit.funFact
             )
         } else {
-            // ---------- EDIT EXISTING VEHICLE ---------- //
             state.vehicles.map { v ->
                 if (v.id == edit.id) {
                     v.copy(
@@ -195,4 +224,8 @@ class ProfileViewModel {
         )
     }
 
+    // Single place to write to our "fake DB"
+    private fun persist() {
+        repository.saveProfile(_uiState.value)
+    }
 }

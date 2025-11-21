@@ -43,4 +43,14 @@ sealed interface ProfileEvent {
 
     data object SaveAccountSettings : ProfileEvent
     data object DeleteAccount : ProfileEvent
+
+    data class PrivacySafetyChanged(
+        val showProfilePublicly: Boolean,
+        val allowMessagesFromNonContacts: Boolean,
+        val shareTripHistoryWithFriends: Boolean,
+        val twoFactorEnabled: Boolean
+    ) : ProfileEvent
+
+    data object SavePrivacySafety : ProfileEvent
+
 }

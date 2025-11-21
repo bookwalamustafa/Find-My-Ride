@@ -7,23 +7,23 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.demo.feature.profile.PrivacySafetyState
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
-import androidx.compose.material3.TopAppBarDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivacySafetyScreen(
-    modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    state: PrivacySafetyState,
+    onChange: (PrivacySafetyState) -> Unit,
+    onSave: () -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var showProfilePublicly by remember { mutableStateOf(true) }
-    var allowMessagesFromNonContacts by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,7 +39,8 @@ fun PrivacySafetyScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = DrexelBlue,
-                    titleContentColor = Color.White
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
                 )
             )
         }
@@ -53,56 +54,109 @@ fun PrivacySafetyScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Profile Visibility", style = MaterialTheme.typography.titleMedium)
 
-            PreferenceSwitchRow(
-                title = "Show profile to other riders",
-                subtitle = "Your name and photo will be visible in rides",
-                checked = showProfilePublicly,
-                onCheckedChange = { showProfilePublicly = it }
+            Text(
+                "Profile Visibility",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
             )
 
-            Spacer(Modifier.height(16.dp))
+            PrivacySwitchRow(
+                title = "Show profile publicly",
+                subtitle = "Allow other students to view your basic profile",
+                checked = state.showProfilePublicly,
+                onCheckedChange = {
+                    onChange(state.copy(showProfilePublicly = it))
+                }
+            )
 
-            Text("Messages", style = MaterialTheme.typography.titleMedium)
-
-            PreferenceSwitchRow(
+            PrivacySwitchRow(
                 title = "Allow messages from non-contacts",
-                subtitle = "People who haven’t ridden with you can message you",
-                checked = allowMessagesFromNonContacts,
-                onCheckedChange = { allowMessagesFromNonContacts = it }
+                subtitle = "Let people who haven't ridden with you send requests",
+                checked = state.allowMessagesFromNonContacts,
+                onCheckedChange = {
+                    onChange(state.copy(allowMessagesFromNonContacts = it))
+                }
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))
 
-            Text("Data & Security", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Sharing",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
+            )
 
-            OutlinedButton(
-                onClick = { /* TODO: export data */ },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Download my data")
-            }
+            PrivacySwitchRow(
+                title = "Share trip history with friends",
+                subtitle = "Friends can see your past rides and eco impact",
+                checked = state.shareTripHistoryWithFriends,
+                onCheckedChange = {
+                    onChange(state.copy(shareTripHistoryWithFriends = it))
+                }
+            )
 
-            OutlinedButton(
-                onClick = { /* TODO: report a problem */ },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Report a safety issue")
-            }
+            Spacer(Modifier.height(12.dp))
+
+            Text(
+                "Security",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
+            )
+
+            PrivacySwitchRow(
+                title = "Two-factor authentication",
+                subtitle = "Add an extra step when logging into your account",
+                checked = state.twoFactorEnabled,
+                onCheckedChange = {
+                    onChange(state.copy(twoFactorEnabled = it))
+                }
+            )
 
             Spacer(Modifier.height(24.dp))
 
             Button(
-                onClick = { /* TODO: save privacy settings */ },
+                onClick = onSave,
+                modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = DrexelGold,
                     contentColor = DrexelBlue
-                ),
-                modifier = Modifier.fillMaxWidth()
+                )
             ) {
                 Text("Save Privacy Settings")
             }
         }
+    }
+}
+
+@Composable
+private fun PrivacySwitchRow(
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    val switchColors = SwitchDefaults.colors(
+        checkedThumbColor = Color.White,
+        checkedTrackColor = DrexelBlue,
+        uncheckedThumbColor = Color.White,
+        uncheckedTrackColor = Color.LightGray,
+        checkedBorderColor = DrexelBlue,
+        uncheckedBorderColor = Color.LightGray
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+        }
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = switchColors
+        )
     }
 }
