@@ -1,36 +1,20 @@
 package com.example.demo.ui.theme
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.composeapp.generated.resources.Res
 import app.composeapp.generated.resources.ic_back_arrow
-
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -47,7 +31,7 @@ fun FindRideScreen() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp) // Covers top portion
+                .height(200.dp)
                 .background(DrexelBlue)
                 .padding(24.dp)
         ) {
@@ -90,7 +74,62 @@ fun FindRideScreen() {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Locations
+                RideInput(label = "Pickup Location", icon = painterResource(Res.drawable.ic_back_arrow), value = "30th Street Station")
+                RideInput(label = "Drop-off Location", icon = painterResource(Res.drawable.ic_back_arrow), value = "Cira Green")
 
+                // Date & Time
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    RideInput(
+                        label = "Date",
+                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        value = "mm/dd/yyyy",
+                        modifier = Modifier.weight(1f)
+                    )
+                    RideInput(
+                        label = "Time",
+                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        value = "--:-- --",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                // Seats & Price
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    RideInput(
+                        label = "Seats Needed",
+                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        value = "1 Seat",
+                        modifier = Modifier.weight(1f)
+                    )
+                    RideInput(
+                        label = "Max Price",
+                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        value = "20",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Search Button
+                Button(
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = DrexelGold,
+                        contentColor = DrexelBlue
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = "Search for Rides",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
             }
         }
     }
@@ -99,16 +138,47 @@ fun FindRideScreen() {
 @Composable
 fun RideInput(
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: Painter,
     value: String,
     modifier: Modifier = Modifier
 ) {
+    var textState by remember { mutableStateOf(value) }
+    val fieldColor = Color(0xFFF3F4F6)
+
     Column(modifier = modifier) {
         Text(
             text = label,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
+            color = DrexelBlue,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        OutlinedTextField(
+            value = textState,
+            onValueChange = { textState = it },
+
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    tint = HintGrey,
+                    modifier = Modifier.size(20.dp)
+                )
+            },
+
+            shape = RoundedCornerShape(8.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = fieldColor,
+                unfocusedContainerColor = fieldColor,
+                disabledContainerColor = fieldColor,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                focusedTextColor = DrexelBlue,
+                unfocusedTextColor = DrexelBlue
+            ),
+            singleLine = true,
         )
     }
 }
