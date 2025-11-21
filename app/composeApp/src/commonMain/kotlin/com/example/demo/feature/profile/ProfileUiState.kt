@@ -54,6 +54,7 @@ data class ProfileUiState(
     val isVehicleDialogOpen: Boolean = false,
     val vehicleEdit: VehicleEditState = VehicleEditState(),
     val preferences: PreferencesState = PreferencesState(),
+    val account: AccountSettingsState = AccountSettingsState(),
 )
 
 
@@ -61,4 +62,11 @@ data class PreferencesState(
     val notificationsEnabled: Boolean = true,
     val emailUpdatesEnabled: Boolean = false,
     val darkModeEnabled: Boolean = false,
+)
+
+data class AccountSettingsState(
+    val fullName: String = "John Doe",
+    val email: String = "john.doe@email.com",
+    val phone: String = "0123456789",
+    val password: String = "*******",
 )

@@ -52,9 +52,20 @@ fun ProfileRoute(
         )
 
         ProfilePage.AccountSettings -> AccountSettingsScreen(
-            modifier = modifier,
+            state = state.account,
+            onChange = { updated ->
+                viewModel.onEvent(ProfileEvent.AccountSettingsChanged(
+                    fullName = updated.fullName,
+                    email = updated.email,
+                    phone = updated.phone,
+                    password = updated.password
+                ))
+            },
+            onSave = { viewModel.onEvent(ProfileEvent.SaveAccountSettings) },
+            onDelete = { viewModel.onEvent(ProfileEvent.DeleteAccount) },
             onBack = { currentPage = ProfilePage.Overview }
         )
+
 
         ProfilePage.Preferences -> PreferencesScreen(
             prefs = state.preferences,

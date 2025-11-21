@@ -34,4 +34,13 @@ sealed interface ProfileEvent {
     data class SettingsClicked(val option: SettingsOption) : ProfileEvent
     data object SettingsDialogDismissed : ProfileEvent
 
+    data class AccountSettingsChanged(
+        val fullName: String? = null,
+        val email: String? = null,
+        val phone: String? = null,
+        val password: String? = null,
+    ) : ProfileEvent
+
+    data object SaveAccountSettings : ProfileEvent
+    data object DeleteAccount : ProfileEvent
 }

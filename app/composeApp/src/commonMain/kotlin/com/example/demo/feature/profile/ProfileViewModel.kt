@@ -112,10 +112,34 @@ class ProfileViewModel {
                 )
             }
 
-
             ProfileEvent.SavePreferences -> {
                 println("Preferences saved: ${_uiState.value.preferences}")
             }
+
+
+            is ProfileEvent.AccountSettingsChanged -> {
+                val current = _uiState.value.account
+                _uiState.value = _uiState.value.copy(
+                    account = current.copy(
+                        fullName = event.fullName ?: current.fullName,
+                        email = event.email ?: current.email,
+                        phone = event.phone ?: current.phone,
+                        password = event.password ?: current.password,
+                    )
+                )
+            }
+
+            ProfileEvent.SaveAccountSettings -> {
+                println("ACCOUNT UPDATED: ${_uiState.value.account}")
+                // future write to db
+            }
+
+            ProfileEvent.DeleteAccount -> {
+                println("DELETE ACCOUNT SETTINGS: ${_uiState.value.account}")
+                // future delete from db
+            }
+
+
         }
     }
 
