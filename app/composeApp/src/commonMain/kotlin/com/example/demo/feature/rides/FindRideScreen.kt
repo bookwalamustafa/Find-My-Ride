@@ -110,7 +110,7 @@ fun FindRideScreen() {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 // Search Button
                 Button(
