@@ -101,6 +101,21 @@ class ProfileViewModel {
                     selectedSettingsOption = null
                 )
             }
+
+            is ProfileEvent.PreferencesChanged -> {
+                _uiState.value = _uiState.value.copy(
+                    preferences = _uiState.value.preferences.copy(
+                        notificationEnabled = event.notificationEnabled,
+                        emailUpdatesEnabled = event.emailUpdatesEnabled,
+                        darkModeEnabled = event.darkModeEnabled
+                    )
+                )
+            }
+
+
+            ProfileEvent.SavePreferences -> {
+                println("Preferences saved: ${_uiState.value.preferences}")
+            }
         }
     }
 

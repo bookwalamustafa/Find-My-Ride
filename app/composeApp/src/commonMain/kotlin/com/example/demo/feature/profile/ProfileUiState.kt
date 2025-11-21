@@ -52,5 +52,13 @@ data class ProfileUiState(
 
     // dialog / editing state
     val isVehicleDialogOpen: Boolean = false,
-    val vehicleEdit: VehicleEditState = VehicleEditState()
+    val vehicleEdit: VehicleEditState = VehicleEditState(),
+    val preferences: PreferencesState = PreferencesState(),
+)
+
+
+data class PreferencesState(
+    val notificationEnabled: Boolean = true,
+    val emailUpdatesEnabled: Boolean = false,
+    val darkModeEnabled: Boolean = false,
 )

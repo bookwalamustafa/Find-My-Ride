@@ -22,6 +22,13 @@ sealed interface ProfileEvent {
     data object SaveVehicleChanges : ProfileEvent
 
 
+    data class PreferencesChanged(
+        val notificationEnabled: Boolean,
+        val emailUpdatesEnabled: Boolean,
+        val darkModeEnabled: Boolean,
+    ) : ProfileEvent
+
+    data object SavePreferences : ProfileEvent
 
     // Settings
     data class SettingsClicked(val option: SettingsOption) : ProfileEvent

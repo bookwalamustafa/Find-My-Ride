@@ -1,5 +1,6 @@
-package com.example.demo.feature.profile
+package com.example.demo.feature.profile.pages
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +21,12 @@ fun AccountSettingsScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit
 ) {
+    // 🔹 Local state so fields are editable
+    var fullName by remember { mutableStateOf("John Doe") }
+    var email by remember { mutableStateOf("john.doe@email.com") }
+    var phone by remember { mutableStateOf("+1 (555) 123-4567") }
+    var password by remember { mutableStateOf("********") }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,50 +52,77 @@ fun AccountSettingsScreen(
             modifier = modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F7))
+                .background(Color(0xFFF5F5F7)) // light grey background
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Fake editable fields
+            Text(
+                "Profile",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
+            )
+
+            // 🔹 TextField color overrides so we don’t get purple
+            val textFieldColors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = DrexelBlue,
+                unfocusedBorderColor = Color.LightGray,
+                cursorColor = DrexelBlue,
+                focusedLabelColor = DrexelBlue
+            )
+
             OutlinedTextField(
-                value = "John Doe",
-                onValueChange = {},
+                value = fullName,
+                onValueChange = { fullName = it },
                 label = { Text("Full Name") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
+
             OutlinedTextField(
-                value = "john.doe@email.com",
-                onValueChange = {},
+                value = email,
+                onValueChange = { email = it },
                 label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
+
             OutlinedTextField(
-                value = "+1 (555) 123-4567",
-                onValueChange = {},
+                value = phone,
+                onValueChange = { phone = it },
                 label = { Text("Phone") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Text("Security", style = MaterialTheme.typography.titleMedium)
-            OutlinedTextField(
-                value = "********",
-                onValueChange = {},
-                label = { Text("Password") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
 
             Spacer(Modifier.height(8.dp))
 
+            Text(
+                "Security",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
+            )
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // 🔹 Primary action button in DrexelGold
             Button(
-                onClick = { /* TODO: change password */ },
+                onClick = {
+                    // TODO: hook up to real update logic
+                },
+                modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = DrexelGold,
                     contentColor = DrexelBlue
-                ),
-                modifier = Modifier.fillMaxWidth()
+                )
             ) {
                 Text("Update Account")
             }
@@ -100,12 +134,16 @@ fun AccountSettingsScreen(
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.Red
             )
+
             OutlinedButton(
-                onClick = { /* TODO: delete account */ },
+                onClick = {
+                    // TODO: hook up delete logic (and/or confirmation dialog)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color.Red
-                )
+                ),
+                border = BorderStroke(width = 1.dp, color = Color.Red)
             ) {
                 Text("Delete Account")
             }

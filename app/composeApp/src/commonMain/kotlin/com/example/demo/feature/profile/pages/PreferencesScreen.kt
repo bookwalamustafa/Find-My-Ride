@@ -1,4 +1,4 @@
-package com.example.demo.feature.profile
+package com.example.demo.feature.profile.pages
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,6 +21,7 @@ fun PreferencesScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit
 ) {
+    // Local state so switches actually toggle
     var notificationsEnabled by remember { mutableStateOf(true) }
     var emailUpdatesEnabled by remember { mutableStateOf(false) }
     var darkModeEnabled by remember { mutableStateOf(false) }
@@ -40,7 +41,8 @@ fun PreferencesScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = DrexelBlue,
-                    titleContentColor = Color.White
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
                 )
             )
         }
@@ -54,7 +56,12 @@ fun PreferencesScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Notifications", style = MaterialTheme.typography.titleMedium)
+
+            Text(
+                "Notifications",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
+            )
 
             PreferenceSwitchRow(
                 title = "Push notifications",
@@ -72,7 +79,11 @@ fun PreferencesScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            Text("Appearance", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Appearance",
+                style = MaterialTheme.typography.titleMedium,
+                color = DrexelBlue
+            )
 
             PreferenceSwitchRow(
                 title = "Dark mode",
@@ -84,12 +95,15 @@ fun PreferencesScreen(
             Spacer(Modifier.height(24.dp))
 
             Button(
-                onClick = { /* TODO: save prefs */ },
+                onClick = {
+                    // TODO: hook up to ViewModel / save to data store later
+                    // e.g. onEvent(ProfileEvent.PreferencesSaved(...))
+                },
+                modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = DrexelGold,
                     contentColor = DrexelBlue
-                ),
-                modifier = Modifier.fillMaxWidth()
+                )
             ) {
                 Text("Save Preferences")
             }
@@ -104,6 +118,16 @@ fun PreferenceSwitchRow(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    // Drexel-styled switch colors
+    val switchColors = SwitchDefaults.colors(
+        checkedThumbColor = Color.White,
+        checkedTrackColor = DrexelBlue,
+        uncheckedThumbColor = Color.White,
+        uncheckedTrackColor = Color.LightGray,
+        checkedBorderColor = DrexelBlue,
+        uncheckedBorderColor = Color.LightGray
+    )
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -114,7 +138,8 @@ fun PreferenceSwitchRow(
         }
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            colors = switchColors
         )
     }
 }
