@@ -15,6 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.composeapp.generated.resources.Res
 import app.composeapp.generated.resources.ic_back_arrow
+import app.composeapp.generated.resources.ic_location_ping
+import app.composeapp.generated.resources.ic_clock
+import app.composeapp.generated.resources.ic_two_people
+import app.composeapp.generated.resources.ic_dollar_sign
+import app.composeapp.generated.resources.ic_vehicle
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -75,27 +80,27 @@ fun OfferRideScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Locations
-                RideInput(label = "Origin Location", icon = painterResource(Res.drawable.ic_back_arrow), value = "University Crossings")
-                RideInput(label = "Destination", icon = painterResource(Res.drawable.ic_back_arrow), value = "Korman Center")
+                RideInput(label = "Origin Location", icon = painterResource(Res.drawable.ic_location_ping), value = "University Crossings")
+                RideInput(label = "Destination", icon = painterResource(Res.drawable.ic_location_ping), value = "Korman Center")
 
                 // Departure Time
                 RideInput(
                     label = "Departure Time",
-                    icon = painterResource(Res.drawable.ic_back_arrow),
+                    icon = painterResource(Res.drawable.ic_clock),
                     value = "mm/dd/yyyy --:-- --",
                 )
 
                 // Vehicle Selection
                 RideInput(
                     label = "Choose Vehicle",
-                    icon = painterResource(Res.drawable.ic_back_arrow),
+                    icon = painterResource(Res.drawable.ic_vehicle),
                     value = "Tesla Model Y (Blue)",
                 )
 
                 // Available Seats
                 RideInput(
                     label = "Available Seats",
-                    icon = painterResource(Res.drawable.ic_back_arrow),
+                    icon = painterResource(Res.drawable.ic_two_people),
                     value = "2 Seats",
                 )
 
@@ -103,13 +108,13 @@ fun OfferRideScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Base Price",
-                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        icon = painterResource(Res.drawable.ic_dollar_sign),
                         value = "5.00",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Per Mile",
-                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        icon = painterResource(Res.drawable.ic_dollar_sign),
                         value = "0.50",
                         modifier = Modifier.weight(1f)
                     )

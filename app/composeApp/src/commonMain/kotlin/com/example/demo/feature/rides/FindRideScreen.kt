@@ -15,6 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.composeapp.generated.resources.Res
 import app.composeapp.generated.resources.ic_back_arrow
+import app.composeapp.generated.resources.ic_location_ping
+import app.composeapp.generated.resources.ic_calendar
+import app.composeapp.generated.resources.ic_clock
+import app.composeapp.generated.resources.ic_two_people
+import app.composeapp.generated.resources.ic_dollar_sign
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -75,20 +80,20 @@ fun FindRideScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Locations
-                RideInput(label = "Pickup Location", icon = painterResource(Res.drawable.ic_back_arrow), value = "30th Street Station")
-                RideInput(label = "Drop-off Location", icon = painterResource(Res.drawable.ic_back_arrow), value = "Cira Green")
+                RideInput(label = "Pickup Location", icon = painterResource(Res.drawable.ic_location_ping), value = "30th Street Station")
+                RideInput(label = "Drop-off Location", icon = painterResource(Res.drawable.ic_location_ping), value = "Cira Green")
 
                 // Date & Time
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Date",
-                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        icon = painterResource(Res.drawable.ic_calendar),
                         value = "mm/dd/yyyy",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Time",
-                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        icon = painterResource(Res.drawable.ic_clock),
                         value = "--:-- --",
                         modifier = Modifier.weight(1f)
                     )
@@ -98,13 +103,13 @@ fun FindRideScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Seats Needed",
-                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        icon = painterResource(Res.drawable.ic_two_people),
                         value = "1 Seat",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Max Price",
-                        icon = painterResource(Res.drawable.ic_back_arrow),
+                        icon = painterResource(Res.drawable.ic_dollar_sign),
                         value = "20",
                         modifier = Modifier.weight(1f)
                     )
@@ -164,7 +169,7 @@ fun RideInput(
                     painter = icon,
                     contentDescription = null,
                     tint = HintGrey,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(28.dp)
                 )
             },
 
