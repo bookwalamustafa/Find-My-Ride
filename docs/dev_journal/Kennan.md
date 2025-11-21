@@ -1,3 +1,9 @@
+# 11/20/2025
+
+Experienced a bunch of issues with trying to build and run the app.
+
+Solution: Deleted the .gradle folder in the app subdirectory and forced it to be rebuilt.
+
 # 11/16/2025
 
 ## Development Strategy
