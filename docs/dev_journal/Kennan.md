@@ -31,6 +31,22 @@ You should use your own SVG/XML files if you want to import icons onto the UI fo
 EXAMPLE CALL using painterResource: 
 icon = painterResource(Res.drawable.ic_calendar)
 
+#### 11/21/2025 Update: ANDROID DOES NOT SUPPORT SVG FILES
+
+Here's how to convert them to XML before use:
+
+    1. In the Project view (left panel), right-click on your commonMain/composeResources/drawable folder.
+
+    2. Select New > Vector Asset.
+
+    3. In the "Asset Type" section, choose Local file (SVG, PSD).
+
+    4. Click the folder icon next to Path and select your original SVG file.
+
+    5. Click Next and then Finish.
+
+This will create a new .xml file in that folder. Delete the old .svg file so there is no confusion.
+
 # 11/2/2025
 
 - Initialize the SQLite Database
