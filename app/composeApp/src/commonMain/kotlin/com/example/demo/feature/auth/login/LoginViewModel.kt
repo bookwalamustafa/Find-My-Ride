@@ -1,54 +1,55 @@
 package com.example.demo.feature.auth.login
 
-import kotlinx. coroutines.flow.MutableStateFlow
+import com.example.demo.feature.auth.data.AuthRepository
+import com.example.demo.feature.auth.data.FakeAuthRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class LoginViewModel {
+// real app ready: async + error handling
+class LoginViewModel(
+    private val repository: AuthRepository = FakeAuthRepository()
+) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
 
     fun onEvent(event: LoginEvent) {
         when (event) {
-            is LoginEvent.EmailChanged -> {
+            is LoginEvent.EmailChanged ->
+                _uiState.value = _uiState.value.copy(email = event.value, errorMessage = null)
+
+            is LoginEvent.PasswordChanged ->
+                _uiState.value = _uiState.value.copy(password = event.value, errorMessage = null)
+
+            LoginEvent.Submit -> submit()
+        }
+    }
+
+    private fun submit() {
+        val state = _uiState.value
+
+        if (state.email.isBlank() || state.password.isBlank()) {
+            _uiState.value = state.copy(errorMessage = "Email and password are required")
+            return
+        }
+
+        _uiState.value = state.copy(isLoading = true, errorMessage = null)
+
+        scope.launch {
+            val result = repository.login(state.email, state.password)
+            if (result.isSuccess) {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                // later: trigger navigation to main app screen
+            } else {
                 _uiState.value = _uiState.value.copy(
-                    email = event.value,
-                    errorMessage = null
+                    isLoading = false,
+                    errorMessage = result.exceptionOrNull()?.message ?: "Login failed"
                 )
-            }
-
-            is LoginEvent.PasswordChanged -> {
-                _uiState.value = _uiState.value.copy(
-                    password = event.value,
-                    errorMessage = null
-                )
-            }
-
-            LoginEvent.Submit -> {
-                // Will be a very basic validation for now
-                val current = _uiState.value
-                if (current.email.isBlank() || current.password.isBlank()) {
-                    _uiState.value = current.copy(
-                        errorMessage = "Please enter both a valid email and password"
-                    )
-                } else {
-                    // Here is where you would call your auth API/repository
-                    _uiState.value = current.copy(
-                        isLoading = false,
-                        errorMessage = null
-                    )
-                }
-            }
-
-            LoginEvent.ForgotPassword -> {
-                // Later: navigate or open reset flow
-                // For now we just clear error
-                _uiState.value = _uiState.value.copy(errorMessage = null)
-            }
-
-            LoginEvent.SignUp -> {
-                // Later: navigate to sign up screen
-                _uiState.value = _uiState.value.copy(errorMessage = null)
             }
         }
     }
