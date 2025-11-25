@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.example.demo.feature.profile.ProfileRoute
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import com.example.demo.feature.messages.list.MessagesRoute
 
 enum class MainTab { Home, Rides, Messages, Profile }
 
@@ -40,10 +41,7 @@ fun MainRoute() {
                 )
             }
             MainTab.Messages -> {
-                Text(
-                    text = "Messages placeholder",
-                    modifier = Modifier.padding(padding)
-                )
+                MessagesRoute(modifier = Modifier.padding(padding))
             }
             MainTab.Profile -> {
                 ProfileRoute(modifier = Modifier.padding(padding))

@@ -1,6 +1,8 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="composeApp-js">
-    <output-path>$PROJECT_DIR$/Find-My-Ride/composeApp/build/libs</output-path>
-    <root id="archive" name="composeApp-js.jar" />
+    <output-path>$PROJECT_DIR$/app/composeApp/build/libs</output-path>
+    <root id="archive" name="composeApp-js.jar">
+      <element id="module-output" name="app.composeApp.jsMain" />
+    </root>
   </artifact>
 </component>
