@@ -1,7 +1,7 @@
 package com.example.demo.feature.auth.signup
 
 data class SignUpUiState(
-    val name: String = "",
+    val fullName: String = "",
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",

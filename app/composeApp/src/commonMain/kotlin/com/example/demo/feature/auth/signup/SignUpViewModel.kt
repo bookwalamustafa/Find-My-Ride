@@ -10,7 +10,7 @@ class SignUpViewModel {
     fun onEvent(event: SignUpEvent) {
         when (event) {
             is SignUpEvent.NameChanged ->
-                _uiState.value = _uiState.value.copy(name = event.value, errorMessage = null)
+                _uiState.value = _uiState.value.copy(fullName = event.value, errorMessage = null)
 
             is SignUpEvent.EmailChanged ->
                 _uiState.value = _uiState.value.copy(email = event.value, errorMessage = null)
@@ -28,7 +28,7 @@ class SignUpViewModel {
     private fun submit() {
         val current = _uiState.value
 
-        if (current.name.isBlank() ||
+        if (current.fullName.isBlank() ||
             current.email.isBlank() ||
             current.password.isBlank() ||
             current.confirmPassword.isBlank()
