@@ -1,5 +1,7 @@
 package com.example.demo.feature.auth.data
 
+import kotlinx.coroutines.delay
+
 // Later we will change this to connect to our database
 interface AuthRepository {
 
@@ -20,22 +22,27 @@ interface AuthRepository {
  */
 class FakeAuthRepository : AuthRepository {
 
-    private val existingUsers = mutableSetOf<String>("john.doe@email.com")
+    private val existingUsers = mutableSetOf<String>()
 
     override suspend fun login(email: String, password: String): Result<Unit> {
-        // super dumb fake logic here
-        return if (existingUsers.contains(email) && password.isNotEmpty()) {
-            Result.success(Unit)
-        } else {
-            Result.failure(IllegalArgumentException("Invalid email or password"))
+        delay(1000)
+        if (email.isBlank() || password.isBlank()) {
+            return Result.failure(IllegalArgumentException("Email and password required"))
         }
+
+        // Auto-sign-in new users
+        existingUsers.add(email)
+
+        return Result.success(Unit)
     }
+
 
     override suspend fun signUp(
         fullName: String,
         email: String,
         password: String
     ): Result<Unit> {
+        delay(1000)
         if (email.isBlank() || password.length < 6) {
             return Result.failure(IllegalArgumentException("Invalid sign up data"))
         }
@@ -44,6 +51,7 @@ class FakeAuthRepository : AuthRepository {
     }
 
     override suspend fun sendPasswordReset(email: String): Result<Unit> {
+        delay(1000)
         return if (existingUsers.contains(email)) {
             Result.success(Unit)
         } else {

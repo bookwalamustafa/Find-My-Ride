@@ -14,7 +14,7 @@ enum class MainTab { Home, Rides, Messages, Profile }
 
 @Composable
 fun MainRoute() {
-    var currentTab by remember { mutableStateOf(MainTab.Profile) } // start on profile for now
+    var currentTab by remember { mutableStateOf(MainTab.Home) } // start on profile for now
 
     Scaffold(
         bottomBar = {
