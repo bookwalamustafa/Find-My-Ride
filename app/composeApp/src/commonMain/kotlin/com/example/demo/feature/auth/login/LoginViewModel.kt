@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// real app ready: async + error handling
 class LoginViewModel(
     private val repository: AuthRepository = FakeAuthRepository()
 ) {
@@ -32,25 +31,52 @@ class LoginViewModel(
 
     private fun submit() {
         val state = _uiState.value
+        val email = state.email.trim()
+        val password = state.password
 
-        if (state.email.isBlank() || state.password.isBlank()) {
-            _uiState.value = state.copy(errorMessage = "Email and password are required")
-            return
+        // Required fields
+        if (email.isBlank() || password.isBlank()) {
+            return setError("Email and password are required.")
         }
 
-        _uiState.value = state.copy(isLoading = true, errorMessage = null)
+        // Basic email validation
+        if (!isValidEmail(email)) {
+            return setError("Please enter a valid email address.")
+        }
+
+        _uiState.value = state.copy(
+            isLoading = true,
+            errorMessage = null
+        )
 
         scope.launch {
-            val result = repository.login(state.email, state.password)
+            val result = repository.login(email, password)
+
             if (result.isSuccess) {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                // later: trigger navigation to main app screen
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    loginSuccess = true,
+                )
             } else {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = result.exceptionOrNull()?.message ?: "Login failed"
+                    errorMessage = result.exceptionOrNull()?.message ?: "Login failed."
                 )
             }
         }
     }
+
+    private fun setError(message: String) {
+        _uiState.value = _uiState.value.copy(
+            errorMessage = message,
+            isLoading = false
+        )
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val at = email.indexOf('@')
+        val dot = email.lastIndexOf('.')
+        return at > 0 && dot > at + 1 && dot < email.length - 1
+    }
 }
+

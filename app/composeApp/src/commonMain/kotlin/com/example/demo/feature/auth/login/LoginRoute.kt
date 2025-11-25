@@ -1,22 +1,28 @@
 package com.example.demo.feature.auth.login
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 
 @Composable
 fun LoginRoute(
     onNavigateToSignUp: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
+    onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = remember { LoginViewModel() }
 ) {
     val state by viewModel.uiState.collectAsState()
+
+    // When login succeeds, trigger navigation once
+    LaunchedEffect(state.loginSuccess) {
+        if (state.loginSuccess) {
+            onLoginSuccess()
+        }
+    }
 
     LoginScreen(
         state = state,
         onEvent = viewModel::onEvent,
         onNavigateToSignUp = onNavigateToSignUp,
-        onNavigateToForgotPassword = onNavigateToForgotPassword,
+        onNavigateToForgotPassword = onNavigateToForgotPassword
     )
 }
