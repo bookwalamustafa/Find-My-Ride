@@ -1,34 +1,27 @@
-package com.example.demo.feature.messages.list
+package com.example.demo.feature.messages
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import com.example.demo.feature.messages.chat.ChatDetailScreen
+import com.example.demo.feature.messages.chat.ChatDetailRoute
+import com.example.demo.feature.messages.list.MessageThreadUi
+import com.example.demo.feature.messages.list.MessagesListRoute
 
-enum class MessagesPage {
-    List,
-    Conversation
-}
-
+private enum class MessagesPage { List, Conversation }
 
 @Composable
 fun MessagesRoute(
-    viewModel: MessagesViewModel = remember { MessagesViewModel() },
     modifier: Modifier = Modifier
 ) {
     var currentPage by remember { mutableStateOf(MessagesPage.List) }
-    var activeThread by remember { mutableStateOf<MessageItemUi?>(null) }
-    val state by viewModel.uiState.collectAsState()
+    var activeThread by remember { mutableStateOf<MessageThreadUi?>(null) }
 
     when (currentPage) {
-        MessagesPage.List -> MessagesScreen(
-            state = state,
-            onEvent = viewModel::onEvent,
-            onOpenConversation = { item ->
-                activeThread = item
+        MessagesPage.List -> MessagesListRoute(
+            modifier = modifier,
+            onOpenConversation = { thread ->
+                activeThread = thread
                 currentPage = MessagesPage.Conversation
-            },
-            modifier = modifier
+            }
         )
 
         MessagesPage.Conversation -> {
@@ -36,7 +29,8 @@ fun MessagesRoute(
             if (thread == null) {
                 currentPage = MessagesPage.List
             } else {
-                ChatDetailScreen(
+                ChatDetailRoute(
+                    threadId = thread.id,
                     contactName = thread.senderName,
                     initials = thread.initials,
                     onBack = { currentPage = MessagesPage.List },
@@ -46,4 +40,3 @@ fun MessagesRoute(
         }
     }
 }
-

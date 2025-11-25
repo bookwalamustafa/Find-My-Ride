@@ -10,7 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,193 +18,153 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.demo.feature.messages.list.MessagesEvent
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessagesScreen(
     state: MessagesUiState,
     onEvent: (MessagesEvent) -> Unit,
-    onOpenConversation: (MessageItemUi) -> Unit,
+    onOpenConversation: (MessageThreadUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F5F7)) // light background like your other pages
-    ) {
-
-        // Top header with search
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(DrexelBlue)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-            ) {
-                Text(
-                    text = "Messages",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text("Messages") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = DrexelBlue,
+                    titleContentColor = Color.White
                 )
-
-                Spacer(Modifier.height(12.dp))
-
-                SearchBar(
-                    query = state.searchQuery,
-                    onQueryChange = { onEvent(MessagesEvent.SearchQueryChanged(it)) }
-                )
-            }
+            )
         }
-
-        // List of messages
-        LazyColumn(
+    ) { padding ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 0.dp, vertical = 8.dp)
+                .padding(padding)
+                .background(Color(0xFFF5F5F7))
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            items(state.messages) { item ->
-                MessageRow(
-                    item = item,
-                    onClick = {
-                        onEvent(MessagesEvent.MessageClicked(item.id))
-                        onOpenConversation(item)
-                    }
-
-                )
-                Divider(color = Color(0xFFE5E5EA), thickness = 1.dp)
-            }
-        }
-    }
-}
-
-// ---------- Search bar ----------
-@Composable
-private fun SearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(44.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFF12395F)) // darker blue-ish, like a subtle field
-            .padding(horizontal = 12.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search",
-                tint = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier.size(20.dp)
+            // Search bar
+            OutlinedTextField(
+                value = state.searchQuery,
+                onValueChange = { onEvent(MessagesEvent.SearchQueryChanged(it)) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search messages") },
+                leadingIcon = {
+                    Icon(Icons.Default.Search, contentDescription = null)
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(20.dp)
             )
-            Spacer(Modifier.width(8.dp))
-            if (query.isEmpty()) {
-                Text(
-                    text = "Search messages...",
-                    color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 14.sp
-                )
+
+            Spacer(Modifier.height(12.dp))
+
+            if (state.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
-                TextField(
-                    value = query,
-                    onValueChange = onQueryChange,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = DrexelGold,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
-                    ),
-                    singleLine = true
-                )
+                val filtered = state.threads.filter {
+                    val q = state.searchQuery.trim().lowercase()
+                    q.isEmpty() ||
+                            it.senderName.lowercase().contains(q) ||
+                            it.lastMessage.lowercase().contains(q)
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(filtered) { thread ->
+                        MessageThreadRow(thread, onClick = { onOpenConversation(thread) })
+                    }
+                }
             }
         }
     }
 }
 
-// ---------- Message row ----------
 @Composable
-private fun MessageRow(
-    item: MessageItemUi,
+private fun MessageThreadRow(
+    thread: MessageThreadUi,
     onClick: () -> Unit
 ) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        // Avatar with initials
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(DrexelBlue),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = item.initials,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
-        }
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(DrexelGold),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = thread.initials,
+                    color = Color.Blue,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+            }
 
-        Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(12.dp))
 
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = item.senderName,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF1C1C1E)
-            )
-            Spacer(Modifier.height(2.dp))
-            Text(
-                text = item.lastMessage,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF8E8E93)
-            )
-        }
+            Column(modifier = Modifier.weight(1f)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = thread.senderName,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = thread.timeAgo,
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
 
-        Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.height(4.dp))
 
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
-            Text(
-                text = item.timeAgo,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF8E8E93)
-            )
+                Text(
+                    text = thread.lastMessage,
+                    fontSize = 13.sp,
+                    color = Color(0xFF555555),
+                    maxLines = 1
+                )
+            }
 
-            if (item.unreadCount > 0) {
-                Spacer(Modifier.height(6.dp))
+            if (thread.unreadCount > 0) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(DrexelGold)
-                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFFF3B30)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = item.unreadCount.toString(),
-                        color = DrexelBlue,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
+                        text = thread.unreadCount.toString(),
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }

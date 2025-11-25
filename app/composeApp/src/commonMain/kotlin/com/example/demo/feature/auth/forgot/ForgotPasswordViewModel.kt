@@ -1,7 +1,7 @@
 package com.example.demo.feature.auth.forgot
 
+import FakeAuthRepository
 import com.example.demo.feature.auth.data.AuthRepository
-import com.example.demo.feature.auth.data.FakeAuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

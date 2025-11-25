@@ -1,55 +1,49 @@
 package com.example.demo.feature.messages.list
 
-import com.example.demo.feature.messages.list.MessagesEvent
+import com.example.demo.feature.messages.data.MessagesRepository
+import com.example.demo.feature.messages.data.FakeMessagesRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class MessagesViewModel {
+class MessagesViewModel(
+    private val repository: MessagesRepository = FakeMessagesRepository(),
+    private val userId: Int = 1   // fake current user
+) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val _uiState = MutableStateFlow(
-        MessagesUiState(
-            messages = listOf(
-                MessageItemUi(
-                    id = 1,
-                    senderName = "Abdul B.",
-                    initials = "AB",
-                    lastMessage = "See you at 5:30 PM!",
-                    timeAgo = "2m ago",
-                    unreadCount = 2
-                ),
-                MessageItemUi(
-                    id = 2,
-                    senderName = "Sarah M.",
-                    initials = "SM",
-                    lastMessage = "Thanks for the ride yesterday",
-                    timeAgo = "1h ago",
-                    unreadCount = 0
-                ),
-                MessageItemUi(
-                    id = 3,
-                    senderName = "James K.",
-                    initials = "JK",
-                    lastMessage = "Is there still a seat available?",
-                    timeAgo = "3h ago",
-                    unreadCount = 1
-                )
-            )
-        )
-    )
+    private val _uiState = MutableStateFlow(MessagesUiState(isLoading = true))
     val uiState: StateFlow<MessagesUiState> = _uiState
+
+    init {
+        loadThreads()
+    }
+
+    private fun loadThreads() {
+        scope.launch {
+            try {
+                val threads = repository.getThreadsForUser(userId)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    threads = threads,
+                    errorMessage = null
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = e.message ?: "Failed to load messages"
+                )
+            }
+        }
+    }
 
     fun onEvent(event: MessagesEvent) {
         when (event) {
-            is MessagesEvent.SearchQueryChanged -> {
+            is MessagesEvent.SearchQueryChanged ->
                 _uiState.value = _uiState.value.copy(searchQuery = event.value)
-
-                // later: filter messages by query. For now we just store query.
-            }
-
-            is MessagesEvent.MessageClicked -> {
-                // later: navigate to chat detail, mark read, etc.
-                println("Message clicked: ${event.id}")
-            }
         }
     }
 }

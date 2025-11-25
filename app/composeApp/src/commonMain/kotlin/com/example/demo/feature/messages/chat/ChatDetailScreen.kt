@@ -8,9 +8,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,33 +22,14 @@ import androidx.compose.ui.unit.sp
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
-data class ChatMessageUi(
-    val id: Int,
-    val isMe: Boolean,
-    val text: String,
-    val time: String
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatDetailScreen(
-    contactName: String,
-    initials: String,
+    state: ChatDetailUiState,
+    onEvent: (ChatDetailEvent) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // 🔹 Local conversation state
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessageUi(1, isMe = false, text = "Hey, thanks for the ride!", time = "3h ago"),
-            ChatMessageUi(2, isMe = true,  text = "Of course! Happy to help.", time = "3h ago"),
-            ChatMessageUi(3, isMe = false, text = "Are we still on for 5:30 PM?", time = "2m ago"),
-        )
-    }
-
-    // 🔹 Text field state
-    var newMessage by remember { mutableStateOf("") }
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -62,14 +44,14 @@ fun ChatDetailScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = initials,
+                                text = state.initials,
                                 color = Color.White,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                         Spacer(Modifier.width(8.dp))
-                        Text(contactName)
+                        Text(state.contactName)
                     }
                 },
                 navigationIcon = {
@@ -95,20 +77,20 @@ fun ChatDetailScreen(
                 .padding(padding)
                 .background(Color(0xFFF5F5F7))
         ) {
-            // 🔹 Messages list
+            // Messages
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
-                items(messages) { msg ->
+                items(state.messages) { msg ->
                     ChatBubble(message = msg)
                     Spacer(Modifier.height(6.dp))
                 }
             }
 
-            // 🔹 Input bar
+            // Input bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,8 +99,8 @@ fun ChatDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
-                    value = newMessage,
-                    onValueChange = { newMessage = it },
+                    value = state.newMessageText,
+                    onValueChange = { onEvent(ChatDetailEvent.MessageTextChanged(it)) },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("Type a message...") },
                     maxLines = 3,
@@ -133,22 +115,10 @@ fun ChatDetailScreen(
                 Spacer(Modifier.width(8.dp))
 
                 IconButton(
-                    onClick = {
-                        if (newMessage.isNotBlank()) {
-                            messages.add(
-                                ChatMessageUi(
-                                    id = (messages.maxOfOrNull { it.id } ?: 0) + 1,
-                                    isMe = true,
-                                    text = newMessage.trim(),
-                                    time = "Now"
-                                )
-                            )
-                            newMessage = ""
-                        }
-                    }
+                    onClick = { onEvent(ChatDetailEvent.SendClicked) }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Send,
+                        imageVector = Icons.AutoMirrored.Filled.Send,
                         contentDescription = "Send",
                         tint = DrexelGold
                     )
@@ -179,7 +149,7 @@ private fun ChatBubble(message: ChatMessageUi) {
                         )
                     )
                     .background(if (message.isMe) DrexelBlue else Color.White)
-                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = message.text,
