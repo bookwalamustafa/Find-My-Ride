@@ -35,7 +35,7 @@ fun AuthTextField(
         onValueChange = onValueChange,
         placeholder = { Text(placeholder, color = HintGrey) },
         singleLine = true,
-        visualTransformation = if (isPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None ,
         modifier = modifier,
         shape = RoundedCornerShape(8.dp),
         colors = OutlinedTextFieldDefaults.colors(
