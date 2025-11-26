@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.composeapp.generated.resources.Res
 import app.composeapp.generated.resources.ic_back_arrow
 import com.example.demo.ui.theme.DrexelBlue
