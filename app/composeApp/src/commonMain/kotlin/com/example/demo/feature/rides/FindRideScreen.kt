@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +20,7 @@ import app.composeapp.generated.resources.ic_clock
 import app.composeapp.generated.resources.ic_two_people
 import app.composeapp.generated.resources.ic_dollar_sign
 import org.jetbrains.compose.resources.painterResource
+import com.example.demo.feature.rides.RideInput
 
 @Composable
 fun FindRideScreen() {
@@ -80,21 +80,21 @@ fun FindRideScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Locations
-                RideInput(label = "Pickup Location", icon = painterResource(Res.drawable.ic_location_ping), value = "30th Street Station")
-                RideInput(label = "Drop-off Location", icon = painterResource(Res.drawable.ic_location_ping), value = "Cira Green")
+                RideInput(label = "Pickup Location", icon = painterResource(Res.drawable.ic_location_ping), placeholder = "30th Street Station")
+                RideInput(label = "Drop-off Location", icon = painterResource(Res.drawable.ic_location_ping), placeholder = "Cira Green")
 
                 // Date & Time
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Date",
                         icon = painterResource(Res.drawable.ic_calendar),
-                        value = "mm/dd/yyyy",
+                        placeholder = "mm/dd/yyyy",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Time",
                         icon = painterResource(Res.drawable.ic_clock),
-                        value = "--:-- --",
+                        placeholder = "--:-- --",
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -104,13 +104,13 @@ fun FindRideScreen() {
                     RideInput(
                         label = "Seats Needed",
                         icon = painterResource(Res.drawable.ic_two_people),
-                        value = "1 Seat",
+                        placeholder = "2",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Max Price",
                         icon = painterResource(Res.drawable.ic_dollar_sign),
-                        value = "20",
+                        placeholder = "20",
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -137,53 +137,5 @@ fun FindRideScreen() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun RideInput(
-    label: String,
-    icon: Painter,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    var textState by remember { mutableStateOf(value) }
-    val fieldColor = Color(0xFFF3F4F6)
-
-    Column(modifier = modifier) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.titleMedium,
-            color = DrexelBlue,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        OutlinedTextField(
-            value = textState,
-            onValueChange = { textState = it },
-
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    tint = HintGrey,
-                    modifier = Modifier.size(28.dp)
-                )
-            },
-
-            shape = RoundedCornerShape(8.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = fieldColor,
-                unfocusedContainerColor = fieldColor,
-                disabledContainerColor = fieldColor,
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                focusedTextColor = DrexelBlue,
-                unfocusedTextColor = DrexelBlue
-            ),
-            singleLine = true,
-        )
     }
 }
