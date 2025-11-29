@@ -36,7 +36,7 @@ class FindMyRideDbProvider(private val context: Context) {
         return SQLiteDatabase.openDatabase(
             dbFile.path,
             null,
-            SQLiteDatabase.OPEN_READONLY
+            SQLiteDatabase.OPEN_READWRITE
         )
     }
 }
