@@ -1,26 +1,29 @@
-package com.example.app
+package com.example.rideshare
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.example.demo.AndroidRideRepository
 import com.example.demo.App
+import com.example.demo.FindMyRideDbProvider
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
         setContent {
-            App()
+            MaterialTheme {
+                Surface {
+                    val context = LocalContext.current
+                    val repo = remember {
+                        AndroidRideRepository(FindMyRideDbProvider(context))
+                    }
+                    App(rideRepository = repo)
+                }
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }

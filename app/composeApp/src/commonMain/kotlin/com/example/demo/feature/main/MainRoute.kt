@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.example.demo.feature.profile.ProfileRoute
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import com.example.demo.feature.db.RideRepository
 import com.example.demo.feature.messages.MessagesRoute
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
@@ -16,7 +17,9 @@ import com.example.demo.ui.theme.DrexelGold
 enum class MainTab { Home, Rides, Messages, Profile }
 
 @Composable
-fun MainRoute() {
+fun MainRoute(
+    rideRepository: RideRepository
+) {
     var currentTab by remember { mutableStateOf(MainTab.Home) } // start on profile for now
 
     Scaffold(

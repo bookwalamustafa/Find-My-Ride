@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import com.example.demo.feature.auth.login.LoginRoute
 import com.example.demo.feature.auth.signup.SignUpRoute
 import com.example.demo.feature.auth.forgot.ForgotPasswordRoute
+import com.example.demo.feature.db.RideRepository
 import com.example.demo.feature.main.MainRoute
 import com.example.demo.feature.profile.ProfileRoute
 
@@ -17,7 +18,7 @@ enum class RootScreen {
 }
 
 @Composable
-fun App() {
+fun App(rideRepository: RideRepository) {
     var currentScreen by remember { mutableStateOf(RootScreen.Login) }
 
     MaterialTheme {
@@ -37,7 +38,9 @@ fun App() {
                 onNavigateBack = { currentScreen = RootScreen.Login }
             )
 
-            RootScreen.Main -> MainRoute()
+            RootScreen.Main -> MainRoute(
+                rideRepository = rideRepository
+            )
         }
     }
 }
