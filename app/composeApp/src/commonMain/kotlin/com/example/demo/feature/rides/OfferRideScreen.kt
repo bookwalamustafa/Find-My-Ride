@@ -6,21 +6,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.composeapp.generated.resources.Res
-import app.composeapp.generated.resources.ic_back_arrow
-import app.composeapp.generated.resources.ic_location_ping
-import app.composeapp.generated.resources.ic_clock
-import app.composeapp.generated.resources.ic_two_people
-import app.composeapp.generated.resources.ic_dollar_sign
-import app.composeapp.generated.resources.ic_vehicle
-import org.jetbrains.compose.resources.painterResource
 import com.example.demo.feature.rides.RideInput
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Icon
 
 @Composable
 fun OfferRideScreen() {
@@ -40,9 +35,9 @@ fun OfferRideScreen() {
                 .background(DrexelBlue)
                 .padding(24.dp)
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { /* TODO: back nav */ }) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_back_arrow),
+                    imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back",
                     tint = Color.White
                 )
@@ -80,27 +75,35 @@ fun OfferRideScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Locations
-                RideInput(label = "Origin Location", icon = painterResource(Res.drawable.ic_location_ping), placeholder = "University Crossings")
-                RideInput(label = "Destination", icon = painterResource(Res.drawable.ic_location_ping), placeholder = "Korman Center")
+                RideInput(
+                    label = "Origin Location",
+                    icon = Icons.Filled.LocationOn,
+                    placeholder = "University Crossings"
+                )
+                RideInput(
+                    label = "Destination",
+                    icon = Icons.Filled.LocationOn,
+                    placeholder = "Korman Center"
+                )
 
                 // Departure Time
                 RideInput(
                     label = "Departure Time",
-                    icon = painterResource(Res.drawable.ic_clock),
+                    icon = Icons.Filled.AccessTime,
                     placeholder = "mm/dd/yyyy --:-- --",
                 )
 
                 // Vehicle Selection
                 RideInput(
                     label = "Choose Vehicle",
-                    icon = painterResource(Res.drawable.ic_vehicle),
+                    icon = Icons.Filled.DirectionsCar,
                     placeholder = "Tesla Model Y (Blue)",
                 )
 
                 // Available Seats
                 RideInput(
                     label = "Available Seats",
-                    icon = painterResource(Res.drawable.ic_two_people),
+                    icon = Icons.Filled.Group,
                     placeholder = "2",
                 )
 
@@ -108,13 +111,13 @@ fun OfferRideScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Base Price",
-                        icon = painterResource(Res.drawable.ic_dollar_sign),
+                        icon = Icons.Filled.AttachMoney,
                         placeholder = "5.00",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Per Mile",
-                        icon = painterResource(Res.drawable.ic_dollar_sign),
+                        icon = Icons.Filled.AttachMoney,
                         placeholder = "0.50",
                         modifier = Modifier.weight(1f)
                     )
@@ -122,9 +125,9 @@ fun OfferRideScreen() {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Search Button
+                // Publish Button
                 Button(
-                    onClick = {},
+                    onClick = { /* TODO: publish offer */ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

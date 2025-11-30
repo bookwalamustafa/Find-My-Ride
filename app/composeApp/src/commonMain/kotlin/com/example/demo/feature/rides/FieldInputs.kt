@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.demo.ui.theme.DrexelBlue
@@ -26,7 +27,7 @@ import com.example.demo.ui.theme.HintGrey
 @Composable
 fun RideInput(
     label: String,
-    icon: Painter,
+    icon: ImageVector,
     placeholder: String,
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +57,7 @@ fun RideInput(
 
             leadingIcon = {
                 Icon(
-                    painter = icon,
+                    imageVector = icon,
                     contentDescription = null,
                     tint = HintGrey,
                     modifier = Modifier.size(28.dp)

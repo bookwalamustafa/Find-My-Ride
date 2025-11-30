@@ -6,21 +6,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.composeapp.generated.resources.Res
-import app.composeapp.generated.resources.ic_back_arrow
-import app.composeapp.generated.resources.ic_location_ping
-import app.composeapp.generated.resources.ic_calendar
-import app.composeapp.generated.resources.ic_clock
-import app.composeapp.generated.resources.ic_two_people
-import app.composeapp.generated.resources.ic_dollar_sign
-import org.jetbrains.compose.resources.painterResource
 import com.example.demo.feature.rides.RideInput
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Icon
 
 @Composable
 fun FindRideScreen() {
@@ -40,9 +35,9 @@ fun FindRideScreen() {
                 .background(DrexelBlue)
                 .padding(24.dp)
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { /* TODO: handle back nav */ }) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_back_arrow),
+                    imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back",
                     tint = Color.White
                 )
@@ -80,20 +75,28 @@ fun FindRideScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Locations
-                RideInput(label = "Pickup Location", icon = painterResource(Res.drawable.ic_location_ping), placeholder = "30th Street Station")
-                RideInput(label = "Drop-off Location", icon = painterResource(Res.drawable.ic_location_ping), placeholder = "Cira Green")
+                RideInput(
+                    label = "Pickup Location",
+                    icon = Icons.Filled.LocationOn,
+                    placeholder = "30th Street Station"
+                )
+                RideInput(
+                    label = "Drop-off Location",
+                    icon = Icons.Filled.LocationOn,
+                    placeholder = "Cira Green"
+                )
 
                 // Date & Time
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Date",
-                        icon = painterResource(Res.drawable.ic_calendar),
+                        icon = Icons.Filled.CalendarMonth,
                         placeholder = "mm/dd/yyyy",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Time",
-                        icon = painterResource(Res.drawable.ic_clock),
+                        icon = Icons.Filled.AccessTime,
                         placeholder = "--:-- --",
                         modifier = Modifier.weight(1f)
                     )
@@ -103,13 +106,13 @@ fun FindRideScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     RideInput(
                         label = "Seats Needed",
-                        icon = painterResource(Res.drawable.ic_two_people),
+                        icon = Icons.Filled.Group,
                         placeholder = "2",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
                         label = "Max Price",
-                        icon = painterResource(Res.drawable.ic_dollar_sign),
+                        icon = Icons.Filled.AttachMoney,
                         placeholder = "20",
                         modifier = Modifier.weight(1f)
                     )
@@ -119,7 +122,7 @@ fun FindRideScreen() {
 
                 // Search Button
                 Button(
-                    onClick = {},
+                    onClick = { /* TODO: trigger search */ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

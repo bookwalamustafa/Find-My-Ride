@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.composeapp.generated.resources.Res
-import app.composeapp.generated.resources.ic_back_arrow
+import androidx.compose.ui.unit.sp
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 import com.example.demo.ui.theme.HintGrey
 import com.example.demo.ui.theme.FieldBackground
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Icon
 
 @Composable
 fun AvailableRidesScreen() {
@@ -53,7 +54,7 @@ fun AvailableRidesScreen() {
             ) {
                 IconButton(onClick = { /* Handle Back */ }) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_back_arrow),
+                        imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = Color.White
                     )
@@ -65,7 +66,11 @@ fun AvailableRidesScreen() {
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     shape = RoundedCornerShape(20.dp)
                 ) {
-                    Icon(painterResource(Res.drawable.ic_back_arrow), contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(
+                        imageVector = Icons.Filled.FilterList,
+                        contentDescription = "Filter",
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Filter")
                 }
@@ -143,7 +148,7 @@ fun RideCard(ride: RideOption) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Icon(
-                        painter = painterResource(Res.drawable.ic_back_arrow),
+                        imageVector = Icons.Filled.Star,
                         contentDescription = "Rating",
                         tint = DrexelGold,
                         modifier = Modifier.size(16.dp)
@@ -192,7 +197,7 @@ fun RideCard(ride: RideOption) {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Icon(
-                    painter = painterResource(Res.drawable.ic_back_arrow),
+                    imageVector = Icons.Filled.ArrowForward,
                     contentDescription = "to",
                     tint = HintGrey,
                     modifier = Modifier.size(14.dp)
