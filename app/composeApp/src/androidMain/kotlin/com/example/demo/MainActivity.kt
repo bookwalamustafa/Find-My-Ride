@@ -22,23 +22,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
+                AvailableRidesScreen()
+                Surface {
+                    val context = LocalContext.current
+                    val dbProvider = remember { FindMyRideDbProvider(context) }
 
-//                Surface {
-//                    val context = LocalContext.current
-//                    val dbProvider = remember { FindMyRideDbProvider(context) }
-//
-//                    val rideRepo = remember { AndroidRideRepository(dbProvider) }
-//                    val profileRepo = remember { AndroidProfileRepository(dbProvider) }
-//                    val authRepo = remember { AndroidAuthRepository(dbProvider) }
-//                    val messagesRepo = remember { AndroidMessagesRepository(dbProvider) }
-//
-//                    App(
-//                        rideRepository = rideRepo,
-//                        profileRepository = profileRepo,
-//                        authRepository = authRepo,
-//                        messagesRepository = messagesRepo
-//                    )
-//                }
+                    val rideRepo = remember { AndroidRideRepository(dbProvider) }
+                    val profileRepo = remember { AndroidProfileRepository(dbProvider) }
+                    val authRepo = remember { AndroidAuthRepository(dbProvider) }
+                    val messagesRepo = remember { AndroidMessagesRepository(dbProvider) }
+
+                    App(
+                        rideRepository = rideRepo,
+                        profileRepository = profileRepo,
+                        authRepository = authRepo,
+                        messagesRepository = messagesRepo
+                    )
+                }
             }
         }
     }

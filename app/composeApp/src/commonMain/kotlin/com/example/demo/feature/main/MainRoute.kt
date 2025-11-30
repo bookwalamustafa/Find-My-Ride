@@ -13,6 +13,7 @@ import com.example.demo.feature.db.RideRepository
 import com.example.demo.feature.messages.MessagesRoute
 import com.example.demo.feature.messages.data.MessagesRepository
 import com.example.demo.feature.profile.data.ProfileRepository
+import com.example.demo.feature.rides.MyRidesScreen
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
@@ -37,15 +38,14 @@ fun MainRoute(
     ) { padding ->
         when (currentTab) {
             MainTab.Home -> {
-                // TODO: replace with real HomeRoute
-                Text(
-                    text = "Home screen placeholder",
-                    modifier = Modifier.padding(padding)
+                HomeScreen(
+                    modifier = Modifier.padding(padding),
+                    onFindRideClick = { currentTab = MainTab.Rides },
+                    onOfferRideClick = { currentTab = MainTab.Rides }
                 )
             }
             MainTab.Rides -> {
-                Text(
-                    text = "My Rides placeholder",
+                MyRidesScreen(
                     modifier = Modifier.padding(padding)
                 )
             }
