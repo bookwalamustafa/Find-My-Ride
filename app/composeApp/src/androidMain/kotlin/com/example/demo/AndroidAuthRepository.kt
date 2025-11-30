@@ -1,5 +1,6 @@
 package com.example.demo
 
+import app.composeapp.generated.resources.Res
 import com.example.demo.feature.auth.data.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,24 +12,41 @@ class AndroidAuthRepository(
     private val dbProvider: FindMyRideDbProvider
 ) : AuthRepository {
 
+
     override suspend fun login(email: String, password: String): Result<Unit> =
         withContext(Dispatchers.IO) {
             val db = dbProvider.getReadableDatabase()
 
             val cursor = db.rawQuery(
                 """
-                SELECT user_id
+                SELECT user_id, email, username, role 
                 FROM "USER"
                 WHERE email = ? AND password_hash = ?
-                LIMIT 1;
                 """.trimIndent(),
                 arrayOf(email, password)
             )
 
             cursor.use {
                 return@withContext if (it.moveToFirst()) {
+                    val idxId       = it.getColumnIndexOrThrow("user_id")
+                    val idxEmail    = it.getColumnIndexOrThrow("email")
+                    val idxUsername = it.getColumnIndexOrThrow("username")
+                    val idxRole     = it.getColumnIndexOrThrow("role")
+
+                    // Remember who is logged in
+                    CurrentUserStore.userId     = it.getLong(idxId)
+                    CurrentUserStore.email      = it.getString(idxEmail)
+                    CurrentUserStore.username   = it.getString(idxUsername)
+                    CurrentUserStore.role       = it.getString(idxRole)
+
                     Result.success(Unit)
                 } else {
+                    // Clear any previous user
+                    CurrentUserStore.userId     = null
+                    CurrentUserStore.email      = null
+                    CurrentUserStore.username   = null
+                    CurrentUserStore.role       = null
+
                     Result.failure(IllegalArgumentException("Invalid email or password"))
                 }
             }
