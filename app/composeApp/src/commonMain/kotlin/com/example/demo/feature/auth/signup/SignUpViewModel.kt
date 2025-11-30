@@ -1,7 +1,7 @@
 package com.example.demo.feature.auth.signup
 
+import FakeAuthRepository
 import com.example.demo.feature.auth.data.AuthRepository
-import com.example.demo.feature.auth.data.FakeAuthRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

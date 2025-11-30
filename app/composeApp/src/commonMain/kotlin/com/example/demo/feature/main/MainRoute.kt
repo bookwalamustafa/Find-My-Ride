@@ -9,6 +9,9 @@ import androidx.compose.ui.unit.dp
 import com.example.demo.feature.profile.ProfileRoute
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import com.example.demo.feature.messages.MessagesRoute
+import com.example.demo.ui.theme.DrexelBlue
+import com.example.demo.ui.theme.DrexelGold
 
 enum class MainTab { Home, Rides, Messages, Profile }
 
@@ -40,10 +43,7 @@ fun MainRoute() {
                 )
             }
             MainTab.Messages -> {
-                Text(
-                    text = "Messages placeholder",
-                    modifier = Modifier.padding(padding)
-                )
+                MessagesRoute(modifier = Modifier.padding(padding))
             }
             MainTab.Profile -> {
                 ProfileRoute(modifier = Modifier.padding(padding))
@@ -61,29 +61,42 @@ private fun MainBottomNav(
         containerColor = Color.White,
         tonalElevation = 4.dp
     ) {
+        val itemColors = NavigationBarItemDefaults.colors(
+            selectedIconColor = DrexelBlue,
+            selectedTextColor = DrexelBlue,
+            unselectedIconColor = Color.Gray,
+            unselectedTextColor = Color.Gray,
+            indicatorColor = DrexelGold.copy(alpha = 0.18f) // subtle gold pill behind selected
+        )
+
         NavigationBarItem(
             selected = currentTab == MainTab.Home,
             onClick = { onTabSelected(MainTab.Home) },
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") }
+            label = { Text("Home") },
+            colors = itemColors
         )
         NavigationBarItem(
             selected = currentTab == MainTab.Rides,
             onClick = { onTabSelected(MainTab.Rides) },
             icon = { Icon(Icons.Default.CalendarToday, contentDescription = "My Rides") },
-            label = { Text("My Rides") }
+            label = { Text("My Rides") },
+            colors = itemColors
         )
         NavigationBarItem(
             selected = currentTab == MainTab.Messages,
             onClick = { onTabSelected(MainTab.Messages) },
             icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Messages") },
-            label = { Text("Messages") }
+            label = { Text("Messages") },
+            colors = itemColors
         )
         NavigationBarItem(
             selected = currentTab == MainTab.Profile,
             onClick = { onTabSelected(MainTab.Profile) },
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") }
+            label = { Text("Profile") },
+            colors = itemColors
         )
     }
 }
+
