@@ -15,37 +15,103 @@ class AndroidMessagesRepository(
      * Use logged-in user if available, otherwise fall back to parameter.
      */
     private fun resolveCurrentUserId(paramUserId: Int): Int {
-        val stored = CurrentUserStore.userId
-        return stored?.toInt() ?: paramUserId
+//        val stored = CurrentUserStore.userId
+//        return stored?.toInt() ?: paramUserId
+        return 1;
     }
+
+//    override suspend fun getThreadsForUser(userId: Int): List<MessageThreadUi> =
+//        withContext(Dispatchers.IO) {
+//            listOf(
+//                MessageThreadUi(
+//                    id = 1,
+//                    senderName = "Debug User",
+//                    initials = "DU",
+//                    lastMessage = "If you see this, repo wiring works!",
+//                    timeAgo = "now",
+//                    unreadCount = 0
+//                )
+//            )
+//        }
+
+    private fun seedFakeMessagesIfEmpty(db: android.database.sqlite.SQLiteDatabase) {
+        // Check if we already seeded
+        db.rawQuery("SELECT COUNT(*) FROM MESSAGE_THREAD;", null).use { c ->
+            if (c.moveToFirst()) {
+                val count = c.getInt(0)
+                if (count > 0) return   // already has data, no need to seed
+            }
+        }
+
+        // ---- THREADS ----
+        // All involving user_id = 1 so they'll show when you log in as that user
+        db.execSQL("""
+        INSERT INTO MESSAGE_THREAD (thread_id, user1_id, user2_id)
+        VALUES 
+        (1, 1, 2),
+        (2, 1, 3),
+        (3, 1, 4);
+    """.trimIndent())
+
+        // ---- MESSAGES ----
+        // Thread 1: Abdul <-> Quincy
+        db.execSQL("""
+        INSERT INTO MESSAGE (thread_id, sender_id, body) VALUES
+        (1, 1, 'Hey Quincy, are we still on for 5:30 PM?'),
+        (1, 2, 'Yes! I''ll be there in 10 minutes.'),
+        (1, 1, 'Perfect, see you soon.');
+    """.trimIndent())
+
+        // Thread 2: Abdul <-> Ame
+        db.execSQL("""
+        INSERT INTO MESSAGE (thread_id, sender_id, body) VALUES
+        (2, 3, 'Hey Abdul, do you still need a ride tomorrow?'),
+        (2, 1, 'Yeah! Morning around 9 would be amazing.'),
+        (2, 3, 'Got you, I''ll swing by then.');
+    """.trimIndent())
+
+        // Thread 3: Abdul <-> Kennan
+        db.execSQL("""
+        INSERT INTO MESSAGE (thread_id, sender_id, body) VALUES
+        (3, 1, 'Thanks again for the last ride!'),
+        (3, 4, 'No problem, happy to help.'),
+        (3, 1, 'I left you a 5-star rating too :)');
+    """.trimIndent())
+    }
+
 
     override suspend fun getThreadsForUser(userId: Int): List<MessageThreadUi> =
         withContext(Dispatchers.IO) {
-            val db = dbProvider.getReadableDatabase()
-            val currentUserId = resolveCurrentUserId(userId)
+            val db = dbProvider.getWritableDatabase()
+            val currentUserId = 1   // you’re logging in as user_id = 1
+
+            seedFakeMessagesIfEmpty(db)
 
             val sql = """
-                SELECT 
-                    t.thread_id,
-                    CASE 
-                        WHEN t.user1_id = ? THEN u2.username 
-                        ELSE u1.username 
-                    END AS contact_name,
-                    last_msg.body  AS last_message,
-                    last_msg.sent_at AS last_sent_at
-                FROM MESSAGE_THREAD t
-                JOIN "USER" u1 ON t.user1_id = u1.user_id
-                JOIN "USER" u2 ON t.user2_id = u2.user_id
-                LEFT JOIN MESSAGE last_msg ON last_msg.message_id = (
-                    SELECT m.message_id 
-                    FROM MESSAGE m
-                    WHERE m.thread_id = t.thread_id
-                    ORDER BY m.sent_at DESC, m.message_id DESC
-                    LIMIT 1
-                )
-                WHERE t.user1_id = ? OR t.user2_id = ?
-                ORDER BY last_sent_at DESC NULLS LAST, t.thread_id DESC;
-            """.trimIndent()
+            SELECT 
+                t.thread_id,
+                CASE 
+                    WHEN t.user1_id = ? THEN u2.username 
+                    ELSE u1.username 
+                END AS contact_name,
+                COALESCE(last_msg.body, 'No messages yet')  AS last_message,
+                last_msg.sent_at AS last_sent_at
+            FROM MESSAGE_THREAD t
+            JOIN "USER" u1 ON t.user1_id = u1.user_id
+            JOIN "USER" u2 ON t.user2_id = u2.user_id
+            LEFT JOIN MESSAGE last_msg ON last_msg.message_id = (
+                SELECT m.message_id 
+                FROM MESSAGE m
+                WHERE m.thread_id = t.thread_id
+                ORDER BY m.sent_at DESC, m.message_id DESC
+                LIMIT 1
+            )
+            WHERE t.user1_id = ? OR t.user2_id = ?
+            ORDER BY 
+                (last_sent_at IS NULL),
+                last_sent_at DESC,
+                t.thread_id DESC;
+        """.trimIndent()
 
             val args = arrayOf(
                 currentUserId.toString(),
@@ -64,7 +130,7 @@ class AndroidMessagesRepository(
 
                 while (c.moveToNext()) {
                     val name = c.getString(idxName)
-                    val lastMsg = c.getString(idxLastMsg) ?: "No messages yet"
+                    val lastMsg = c.getString(idxLastMsg)
                     val sentAt = c.getString(idxLastSentAt) ?: ""
 
                     result += MessageThreadUi(
@@ -72,7 +138,7 @@ class AndroidMessagesRepository(
                         senderName = name,
                         initials = initialsFromName(name),
                         lastMessage = lastMsg,
-                        timeAgo = sentAt,   // keep it simple: show timestamp string
+                        timeAgo = sentAt,
                         unreadCount = 0
                     )
                 }

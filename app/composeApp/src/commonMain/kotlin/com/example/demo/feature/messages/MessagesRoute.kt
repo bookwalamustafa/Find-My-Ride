@@ -28,7 +28,6 @@ fun MessagesRoute(
                 }
             )
         }
-
         MessagesPage.Conversation -> {
             val thread = activeThread
             if (thread == null) {
@@ -46,3 +45,4 @@ fun MessagesRoute(
         }
     }
 }
+

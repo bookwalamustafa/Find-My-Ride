@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import com.example.demo.feature.db.RideRepository
 import com.example.demo.feature.messages.MessagesRoute
+import com.example.demo.feature.messages.data.MessagesRepository
+import com.example.demo.feature.profile.data.ProfileRepository
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
@@ -18,7 +20,9 @@ enum class MainTab { Home, Rides, Messages, Profile }
 
 @Composable
 fun MainRoute(
-    rideRepository: RideRepository
+    rideRepository: RideRepository,
+    profileRepository: ProfileRepository,
+    messagesRepository: MessagesRepository,
 ) {
     var currentTab by remember { mutableStateOf(MainTab.Home) } // start on profile for now
 
@@ -46,10 +50,17 @@ fun MainRoute(
                 )
             }
             MainTab.Messages -> {
-                MessagesRoute(modifier = Modifier.padding(padding))
+                MessagesRoute(
+                    modifier = Modifier.padding(padding),
+                    repository = messagesRepository,
+                )
+
             }
             MainTab.Profile -> {
-                ProfileRoute(modifier = Modifier.padding(padding))
+                ProfileRoute(
+                    modifier = Modifier.padding(padding),
+                    repository = profileRepository
+                )
             }
         }
     }

@@ -7,9 +7,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import com.example.demo.AndroidRideRepository
 import com.example.demo.App
+import com.example.demo.AndroidRideRepository
+import com.example.demo.AndroidAuthRepository
 import com.example.demo.FindMyRideDbProvider
+import com.example.demo.feature.profile.data.AndroidProfileRepository
+import com.example.demo.feature.messages.data.AndroidMessagesRepository
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,10 +21,19 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 Surface {
                     val context = LocalContext.current
-                    val repo = remember {
-                        AndroidRideRepository(FindMyRideDbProvider(context))
-                    }
-                    App(rideRepository = repo)
+                    val dbProvider = remember { FindMyRideDbProvider(context) }
+
+                    val rideRepo = remember { AndroidRideRepository(dbProvider) }
+                    val profileRepo = remember { AndroidProfileRepository(dbProvider) }
+                    val authRepo = remember { AndroidAuthRepository(dbProvider) }
+                    val messagesRepo = remember { AndroidMessagesRepository(dbProvider) }
+
+                    App(
+                        rideRepository = rideRepo,
+                        profileRepository = profileRepo,
+                        authRepository = authRepo,
+                        messagesRepository = messagesRepo
+                    )
                 }
             }
         }
