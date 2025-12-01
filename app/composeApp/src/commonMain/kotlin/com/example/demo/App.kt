@@ -50,6 +50,7 @@ fun App(
                 rideRepository = rideRepository,
                 profileRepository = profileRepository,
                 messagesRepository = messagesRepository,
+
             )
         }
     }

@@ -15,14 +15,12 @@ import com.example.demo.feature.profile.data.AndroidProfileRepository
 import com.example.demo.feature.messages.data.AndroidMessagesRepository
 import com.example.demo.feature.rides.AvailableRidesScreen
 import com.example.demo.ui.theme.FindRideScreen
-import com.example.demo.ui.theme.OfferRideScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                AvailableRidesScreen()
                 Surface {
                     val context = LocalContext.current
                     val dbProvider = remember { FindMyRideDbProvider(context) }

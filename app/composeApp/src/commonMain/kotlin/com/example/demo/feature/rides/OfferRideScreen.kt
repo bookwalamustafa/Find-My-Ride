@@ -2,9 +2,9 @@ package com.example.demo.ui.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,29 +13,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demo.feature.rides.RideInput
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Icon
 
 @Composable
-fun OfferRideScreen() {
+fun OfferRideScreen(
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit = {},
+    onPublish: () -> Unit = {}
+) {
     val bgColor = Color(0xFFF3F4F6)
-    val scrollState = rememberScrollState()
 
-    Box(
-        modifier = Modifier
+    Column(
+        modifier = modifier
             .fillMaxSize()
             .background(bgColor)
     ) {
-        // 1. Header Section
+        // ---------- HEADER (smaller) ----------
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
                 .background(DrexelBlue)
-                .padding(24.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            IconButton(onClick = { /* TODO: back nav */ }) {
+            IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back",
@@ -43,40 +42,41 @@ fun OfferRideScreen() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Offer a Ride",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium, // smaller
                 color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = "Share your journey details",
-                style = MaterialTheme.typography.titleLarge,
-                color = HintGrey
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.8f)
             )
         }
 
-        // 2. The Floating Card
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // ---------- CARD ----------
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 175.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .verticalScroll(scrollState), // Make form scrollable on small screens
+                .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp) // tighter spacing
             ) {
-                // Locations
+                // Origin & Destination
                 RideInput(
-                    label = "Origin Location",
+                    label = "Origin",
                     icon = Icons.Filled.LocationOn,
                     placeholder = "University Crossings"
                 )
@@ -86,51 +86,46 @@ fun OfferRideScreen() {
                     placeholder = "Korman Center"
                 )
 
-                // Departure Time
-                RideInput(
-                    label = "Departure Time",
-                    icon = Icons.Filled.AccessTime,
-                    placeholder = "mm/dd/yyyy --:-- --",
-                )
-
-                // Vehicle Selection
-                RideInput(
-                    label = "Choose Vehicle",
-                    icon = Icons.Filled.DirectionsCar,
-                    placeholder = "Tesla Model Y (Blue)",
-                )
-
-                // Available Seats
-                RideInput(
-                    label = "Available Seats",
-                    icon = Icons.Filled.Group,
-                    placeholder = "2",
-                )
-
-                // Base Price & Price Per Mile
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Time + Seats (2 per row to save height)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     RideInput(
-                        label = "Base Price",
-                        icon = Icons.Filled.AttachMoney,
-                        placeholder = "5.00",
+                        label = "Time",
+                        icon = Icons.Filled.AccessTime,
+                        placeholder = "mm/dd hh:mm",
                         modifier = Modifier.weight(1f)
                     )
                     RideInput(
-                        label = "Per Mile",
+                        label = "Seats",
+                        icon = Icons.Filled.Group,
+                        placeholder = "2",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                // Vehicle + Price (2 per row)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    RideInput(
+                        label = "Vehicle",
+                        icon = Icons.Filled.DirectionsCar,
+                        placeholder = "Model Y",
+                        modifier = Modifier.weight(1f)
+                    )
+                    RideInput(
+                        label = "Price",
                         icon = Icons.Filled.AttachMoney,
-                        placeholder = "0.50",
+                        placeholder = "5.00",
                         modifier = Modifier.weight(1f)
                     )
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Publish Button
+                // ---------- BUTTON (always visible) ----------
                 Button(
-                    onClick = { /* TODO: publish offer */ },
+                    onClick = onPublish,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
+                        .height(44.dp), // a bit shorter
                     colors = ButtonDefaults.buttonColors(
                         containerColor = DrexelGold,
                         contentColor = DrexelBlue
@@ -139,11 +134,14 @@ fun OfferRideScreen() {
                 ) {
                     Text(
                         text = "Publish Offer",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp   // smaller
                     )
                 }
             }
         }
+
+        // tiny spacer so it doesn’t touch bottom nav
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }

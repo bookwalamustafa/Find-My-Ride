@@ -21,108 +21,121 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 
-@Composable
-fun AvailableRidesScreen() {
-    // Dummy Data
-    val bestMatches = listOf(
-        RideOption("Abdul B.", 4.92, 11.71, 3, "Tesla Model Y (Blue)", "30th Street Station", "Cira Green", "Today 5:30 PM", true),
-        RideOption("Sarah M.", 4.87, 12.50, 2, "Honda Accord (Silver)", "30th Street Station", "Cira Green", "Today 5:45 PM", true),
-        RideOption("James K.", 4.85, 10.99, 4, "Toyota Camry (Black)", "30th Street Station", "Cira Green", "Today 6:00 PM", true)
-    )
+import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
+import com.example.demo.feature.db.RideOffer
+import com.example.demo.feature.db.RideRepository
 
-    val otherMatches = listOf(
-        RideOption("Lisa P.", 4.73, 14.25, 2, "Mazda CX-5 (Red)", "30th Street Station", "Cira Green", "Today 5:15 PM", false)
-    )
+@Composable
+fun AvailableRidesScreen(
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit = {},
+    rideRepository: RideRepository
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var rideOffers by remember { mutableStateOf<List<RideOffer>>(emptyList()) }
+
+    // load from DB on first composition
+    LaunchedEffect(Unit) {
+        try {
+            isLoading = true
+            errorMessage = null
+            rideOffers = rideRepository.getOpenRideOffers()
+        } catch (e: Exception) {
+            errorMessage = e.message ?: "Failed to load rides"
+        } finally {
+            isLoading = false
+        }
+    }
+
+    // simple “best / other” split (first 3 vs rest)
+    val bestMatches: List<RideOffer> =
+        if (rideOffers.size > 3) rideOffers.take(3) else rideOffers
+    val otherMatches: List<RideOffer> =
+        if (rideOffers.size > 3) rideOffers.drop(3) else emptyList()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(FieldBackground)
     ) {
-        // Custom Header
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(DrexelBlue)
-                .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 32.dp)
-        ) {
-            // Back Arrow and Filter Button
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+        // your existing header / back button code stays the same
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                IconButton(onClick = { /* Handle Back */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
-
-                Button(
-                    onClick = { /* Handle Filter */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B4B6E)), // Slightly lighter blue
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    shape = RoundedCornerShape(20.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.FilterList,
-                        contentDescription = "Filter",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Filter")
-                }
+                CircularProgressIndicator(color = DrexelBlue)
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Available Rides",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = "7 rides found for your route",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White.copy(alpha = 0.7f)
-            )
+            return@Column
         }
 
-        // Scrollable List
+        if (errorMessage != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = errorMessage!!,
+                    color = Color.Red
+                )
+            }
+            return@Column
+        }
+
         LazyColumn(
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Best Matches
-            item {
-                SectionBadge(text = "Best Matches", color = DrexelGold, textColor = DrexelBlue)
-                Spacer(modifier = Modifier.height(8.dp))
+            if (bestMatches.isNotEmpty()) {
+                item {
+                    SectionBadge(
+                        text = "Best Matches",
+                        color = DrexelGold,
+                        textColor = DrexelBlue
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                items(bestMatches) { offer ->
+                    RideCard(offer = offer)
+                }
             }
 
-            items(bestMatches) { ride ->
-                RideCard(ride)
-            }
+            if (otherMatches.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SectionBadge(
+                        text = "Other Matches",
+                        color = Color.White,
+                        textColor = HintGrey,
+                        isBordered = true
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
-            // Other Matches
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                SectionBadge(text = "Other Matches", color = Color.White, textColor = HintGrey, isBordered = true)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            items(otherMatches) { ride ->
-                RideCard(ride)
+                items(otherMatches) { offer ->
+                    RideCard(offer = offer)
+                }
             }
         }
     }
 }
 
+
+
 @Composable
-fun RideCard(ride: RideOption) {
+fun RideCard(offer: RideOffer) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -132,91 +145,54 @@ fun RideCard(ride: RideOption) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            // You don't currently join driver name / rating / car model in RideOffer,
+            // so we’ll show what we *do* have and use placeholders where needed.
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Name, Star, Price, and Seats
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column {
                     Text(
-                        text = ride.driverName,
+                        text = "Driver #${offer.driverId}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = DrexelBlue
                     )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = "Rating",
-                        tint = DrexelGold,
-                        modifier = Modifier.size(16.dp)
-                    )
-
                     Text(
-                        text = ride.rating.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = HintGrey,
-                        modifier = Modifier.padding(start = 4.dp)
+                        text = "Vehicle #${offer.vehicleId}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = HintGrey
                     )
                 }
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "$${ride.price}",
+                        text = "$${"%.2f".format(offer.priceBase)}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = DrexelBlue
                     )
                     Text(
-                        text = "${ride.seats} seats",
-                        style = MaterialTheme.typography.labelSmall,
+                        text = "${offer.seatsAvailable} seats",
+                        style = MaterialTheme.typography.bodySmall,
                         color = HintGrey
                     )
                 }
             }
 
-            // Car Model
+            Spacer(modifier = Modifier.height(12.dp))
+
             Text(
-                text = ride.carModel,
+                text = "${offer.fromName} → ${offer.toName}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = HintGrey
+                color = DrexelBlue
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Route
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = ride.pickup,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = HintGrey
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "to",
-                    tint = HintGrey,
-                    modifier = Modifier.size(14.dp)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = ride.dropoff,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = HintGrey
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Time
             Text(
-                text = ride.time,
+                text = offer.departAt,
                 style = MaterialTheme.typography.bodyMedium,
                 color = DrexelBlue
             )

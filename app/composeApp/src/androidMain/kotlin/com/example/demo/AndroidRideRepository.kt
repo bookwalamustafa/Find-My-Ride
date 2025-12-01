@@ -84,4 +84,34 @@ class AndroidRideRepository(
             db.insert("RIDE_REQUEST", null, values)
         }
     }
+
+    override suspend fun createRideOffer(
+        driverId: Long,
+        vehicleId: Long,
+        originalLocationId: Long,
+        destLocationId: Long,
+        departAt: String,
+        seatsAvailable: Int,
+        priceBase: Double,
+        pricePerMile: Double
+    ) {
+        withContext(Dispatchers.IO) {
+            val db = dbProvider.getWritableDatabase()
+
+            val values = ContentValues().apply {
+                put("driver_id",            driverId)
+                put("vehicle_id",           vehicleId)
+                put("original_location_id", originalLocationId)
+                put("dest_location_id",     destLocationId)
+                put("depart_at",            departAt)
+                put("seats_available",      seatsAvailable)
+                put("price_base",           priceBase)
+                put("price_per_mile",       pricePerMile)
+                put("status",               "open")
+            }
+
+            db.insert("RIDE_OFFER", null, values)
+        }
+    }
+
 }

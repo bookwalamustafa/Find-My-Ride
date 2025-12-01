@@ -21,4 +21,15 @@ interface RideRepository {
         latestPickup: String?,
         seatsNeeded: Int
     )
+
+    suspend fun createRideOffer(
+        driverId: Long,
+        vehicleId: Long,
+        originalLocationId: Long,
+        destLocationId: Long,
+        departAt: String,
+        seatsAvailable: Int,
+        priceBase: Double,
+        pricePerMile: Double
+    )
 }
