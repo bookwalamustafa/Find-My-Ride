@@ -9,7 +9,7 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
@@ -27,12 +27,12 @@
 
 **Find My Ride** is a full-stack **Kotlin Multiplatform (KMP)** mobile application that simulates a Drexel-focused ride-sharing service. The app allows students to:
 
-- ✅ Create an account & log in
-- ✅ View and edit their profile
-- ✅ Browse available ride offers
-- ✅ Publish a ride offer as a driver
-- ✅ Send and receive messages from other users
-- ✅ Store all data in a pre-loaded SQLite database
+- Create an account & log in
+- View and edit their profile
+- Browse available ride offers
+- Publish a ride offer as a driver
+- Send and receive messages from other users
+- Store all data in a pre-loaded SQLite database
 
 The purpose of the project is to demonstrate **end-to-end database integration**, clean architecture, multiplatform UI, and **CRUD (Create, Read, Update, Delete) operations** learned in CS461.
 
@@ -54,9 +54,9 @@ The purpose of the project is to demonstrate **end-to-end database integration**
 - **Raw SQL Queries** – Direct SQL for maximum control and learning (no ORM framework)
 
 ### **Platforms Supported**
-- ✅ **Android** (Primary target – fully functional)
-- ⚠️ **Compose Desktop** (Compilation supported, database layer not implemented)
-- 🔄 **iOS/JS** – KMP structure prepared, but database implementation is Android-only for this assignment
+- **Android** (Primary target – fully functional)
+- **Compose Desktop** (Compilation supported, database layer not implemented)
+- **iOS/JS** – KMP structure prepared, but database implementation is Android-only for this assignment
 
 ---
 
@@ -97,7 +97,7 @@ FindMyRide/
 │   └── schema.sql                    # SQL schema for database creation
 │
 ├── docs/
-│   └── Deliverable_4/                # **📹 Contains live demo & CRUD documentation**
+│   └── Deliverable_4/                # **Contains live demo & CRUD documentation**
 │
 ├── gradle/                           # Gradle wrapper files
 ├── build.gradle.kts                  # Project-level build configuration
@@ -460,11 +460,11 @@ SQLite Database (findmyride.db)
 
 ## Documentation & Demo
 
-### **📹 Live Demo & CRUD Operations**
+### **Live Demo & CRUD Operations**
 
 For a comprehensive demonstration of the application and detailed CRUD operation walkthroughs, please refer to:
 
-📁 **`docs/Deliverable_4/`**
+ **`docs/Deliverable_4/`**
 
 This folder contains:
 - **Live Demo Video**: Complete walkthrough of all application features
@@ -512,7 +512,7 @@ For questions, issues, or contributions:
 
 - **Mustafa Bookwala**: [mmb479@drexel.edu/https://github.com/bookwalamustafa]
 - **Samii Shabuse**: [sus24@drexel.edu/https://github.com/sshabuse]
-- **Kennan Lu**: [kjl354@drexel.edu/]
+- **Kennan Lu**: [kjl354@drexel.edu/kennanLu]
 
 **Course**: CS 461 - Database Systems  
 **Institution**: Drexel University  
