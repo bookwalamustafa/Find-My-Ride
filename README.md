@@ -312,33 +312,23 @@ Repository Implementation (androidMain)
 SQLite Database (findmyride.db)
 ```
 
-### **1. PROFILE Table CRUD** (`AndroidAuthRepository.kt`)
+### **PROFILE Table (Vehicles) CRUD**
 
-#### **Create (Registration)**
-[FILL IN: Explain how user registration works]
-- Example: "When a user registers, the `registerUser()` function..."
-- SQL query used
-- Password hashing approach
-- Validation checks
+#### **Create (Add Vehicle)**
+- **Operation:** Inserts a new vehicle record into the database
+- **Example:** Add a new user vehicle called Nissan Altima
 
-#### **Read (Login & Profile Loading)**
-[FILL IN: Explain how user authentication and profile retrieval works]
-- Example: "Login validates credentials using..."
-- How user sessions are managed
-- Profile data retrieval process
+#### **Read (Display Vehicles)**
+- **Operation:** Queries and retrieves all vehicles associated with the current user
+- **Example:** Displays "Tesla Model 3, Subaru Outback"
 
-#### **Update (Profile Editing)**
-[FILL IN: Explain how profile updates work]
-- Example: "Users can update their profile information through..."
-- Fields that can be updated
-- Validation logic
+#### **Update (Change Vehicle Info)**
+- **Operation:** Modifies existing vehicle attributes in the database
+- **Example:** Update the Plate Number for Tesla Model 3 from PA-ABDU03 to PA-ABDU15
 
-#### **Delete (Account Deletion)**
-[FILL IN: Explain account deletion]
-- Example: "Account deletion is handled by..."
-- Cascade behavior with related data
-- Soft delete vs hard delete approach
-
+#### **Delete (Remove Vehicle)**
+- **Operation:** Removes a vehicle record from the database permanently
+- **Example:** Delete the Subaru Outback Vehicle
 ---
 
 ## Key Implementation Notes
