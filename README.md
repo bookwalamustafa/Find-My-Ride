@@ -420,9 +420,9 @@ This folder contains:
 
 For questions, issues, or contributions:
 
-- **Mustafa Bookwala**: [mmb479@drexel.edu][bookwalamustafa](https://github.com/bookwalamustafa)
-- **Samii Shabuse**: [sus24@drexel.edu][sshabuse](https://github.com/sshabuse)
-- **Kennan Lu**: [kjl354@drexel.edu][kennanLu](https://github.com/kennanLu)
+- **Mustafa Bookwala**: mmb479@drexel.edu / [bookwalamustafa](https://github.com/bookwalamustafa)
+- **Samii Shabuse**: sus24@drexel.edu / [sshabuse](https://github.com/sshabuse)
+- **Kennan Lu**: kjl354@drexel.edu / [kennanLu](https://github.com/kennanLu)
 
 **Course**: CS 461 - Database Systems  
 **Institution**: Drexel University  
