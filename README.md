@@ -312,7 +312,7 @@ Repository Implementation (androidMain)
 SQLite Database (findmyride.db)
 ```
 
-### **1. USER Table CRUD** (`AndroidAuthRepository.kt`)
+### **1. PROFILE Table CRUD** (`AndroidAuthRepository.kt`)
 
 #### **Create (Registration)**
 [FILL IN: Explain how user registration works]
@@ -338,87 +338,6 @@ SQLite Database (findmyride.db)
 - Example: "Account deletion is handled by..."
 - Cascade behavior with related data
 - Soft delete vs hard delete approach
-
----
-
-### **2. VEHICLE Table CRUD** (`AndroidProfileRepository.kt`)
-
-#### **Create (Add Vehicle)**
-[FILL IN: Vehicle creation details]
-
-#### **Read (View Vehicles)**
-[FILL IN: How vehicles are displayed]
-
-#### **Update (Edit Vehicle)**
-[FILL IN: Vehicle editing process]
-
-#### **Delete (Remove Vehicle)**
-[FILL IN: Vehicle removal logic]
-
----
-
-### **3. RIDE_OFFER Table CRUD** (`AndroidRideRepository.kt`)
-
-#### **Create (Publish Ride)**
-[FILL IN: How drivers create ride offers]
-
-#### **Read (Browse Rides)**
-[FILL IN: How rides are listed and filtered]
-
-#### **Update (Modify Ride Details)**
-[FILL IN: Editing existing ride offers]
-
-#### **Delete (Cancel Ride)**
-[FILL IN: Ride cancellation process]
-
----
-
-### **4. RIDE_REQUEST Table CRUD** (`AndroidRideRepository.kt`)
-
-#### **Create (Request a Ride)**
-[FILL IN: How passengers request rides]
-
-#### **Read (View Requests)**
-[FILL IN: Displaying ride requests]
-
-#### **Update (Update Request Status)**
-[FILL IN: Accepting/rejecting requests]
-
-#### **Delete (Cancel Request)**
-[FILL IN: Request cancellation]
-
----
-
-### **5. MESSAGE Table CRUD** (`AndroidMessagesRepository.kt`)
-
-#### **Create (Send Message)**
-[FILL IN: Message sending implementation]
-
-#### **Read (View Messages)**
-[FILL IN: Message retrieval and display]
-
-#### **Update (Edit Message)**
-[FILL IN: If supported, how messages can be edited]
-
-#### **Delete (Delete Message)**
-[FILL IN: Message deletion process]
-
----
-
-### **Database Transaction Handling**
-
-[FILL IN: Explain how you handle database transactions]
-- Example: "All CRUD operations use database transactions to ensure..."
-- Error handling approach
-- Rollback strategy for failed operations
-
-### **Data Validation**
-
-[FILL IN: Describe validation layers]
-- Example: "Input validation occurs at three levels..."
-- UI-level validation
-- Repository-level validation
-- Database constraints
 
 ---
 
