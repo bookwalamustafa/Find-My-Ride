@@ -482,33 +482,27 @@ This folder contains:
 ## Future Improvements
 
 ### **Feature Enhancements**
-- 🔍 **Advanced Filtering**: Filter rides by time, price, available seats, and route
-- 🚗 **Vehicle Picker**: Allow drivers to select from their registered vehicles when offering rides
-- 💬 **Enhanced Messaging**: Full chat UI with real-time updates per ride
-- 🔔 **Notifications**: Push notifications for new ride offers and messages
-- 🧮 **Matching Algorithm**: Intelligent ride request matching based on routes and preferences
-- ⭐ **Rating System**: Allow users to rate drivers and passengers
-- 💳 **Payment Integration**: Add payment processing for ride fares
+- **Advanced Filtering**: Filter rides by time, price, available seats, and route
+- **Vehicle Picker**: Allow drivers to select from their registered vehicles when offering rides
+- **Enhanced Messaging**: Full chat UI with real-time updates per ride
+- **Notifications**: Push notifications for new ride offers and messages
+- **Matching Algorithm**: Intelligent ride request matching based on routes and preferences
+- **Rating System**: Allow users to rate drivers and passengers
+- **Payment Integration**: Add payment processing for ride fares
 
 ### **Technical Improvements**
-- 📱 **iOS Support**: Implement database layer using SQLDelight or KMP-SQLite for iOS compatibility
-- 🌐 **Backend Server**: Move to a centralized server with REST API for real-time data sync
-- 🔐 **Enhanced Security**: Implement JWT authentication and encrypted data storage
-- 🧪 **Testing**: Add unit tests, integration tests, and UI tests
-- 🎨 **Theming**: Dark mode support and customizable themes
-- 🗺️ **Maps Integration**: Visual route display using Google Maps or Mapbox
-- 📊 **Analytics**: Track app usage and user behavior for insights
+- **iOS Support**: Implement database layer using SQLDelight or KMP-SQLite for iOS compatibility
+- **Backend Server**: Move to a centralized server with REST API for real-time data sync
+- **Enhanced Security**: Implement JWT authentication and encrypted data storage
+- **Testing**: Add unit tests, integration tests, and UI tests
+- **Theming**: Dark mode support and customizable themes
+- **Maps Integration**: Visual route display using Google Maps or Mapbox
+- **Analytics**: Track app usage and user behavior for insights
 
 ### **Platform Expansion**
-- 🍎 **iOS Native App**: Full iOS implementation with native database layer
-- 🌍 **Web Version**: Browser-based version using Kotlin/JS
-- 💻 **Desktop Support**: Complete desktop app with database support
-
----
-
-## License
-
-[FILL IN: Add your license information]
+- **iOS Native App**: Full iOS implementation with native database layer
+- **Web Version**: Browser-based version using Kotlin/JS
+- **Desktop Support**: Complete desktop app with database support
 
 ---
 
@@ -516,26 +510,10 @@ This folder contains:
 
 For questions, issues, or contributions:
 
-- **Mustafa Bookwala**: [email/GitHub]
-- **Samii Shabuse**: [email/GitHub]
-- **Kennan Lu**: [email/GitHub]
+- **Mustafa Bookwala**: [mmb479@drexel.edu/GitHub]
+- **Samii Shabuse**: [sus24@drexel.edu/GitHub]
+- **Kennan Lu**: [kjl354@drexel.edu/GitHub]
 
-**Course**: CS 461 – Database Systems  
+**Course**: CS 461 - Database Systems  
 **Institution**: Drexel University  
-**Term**: [FILL IN: Term and Year]
-
----
-
-## Acknowledgments
-
-- **Professor**: [FILL IN: Professor name]
-- **Teaching Assistants**: [FILL IN: TA names if applicable]
-- **Resources Used**: 
-  - Kotlin Multiplatform Documentation
-  - Jetpack Compose Documentation
-  - SQLite Official Documentation
-  - Material Design 3 Guidelines
-
----
-
-**⭐ If you found this project helpful, please consider giving it a star on GitHub!**
+**Term**: Fall 2025
