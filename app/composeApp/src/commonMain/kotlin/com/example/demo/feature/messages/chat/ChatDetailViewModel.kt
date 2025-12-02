@@ -1,5 +1,6 @@
 package com.example.demo.feature.messages.chat
 
+import com.example.demo.feature.messages.data.MessagesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -12,6 +13,7 @@ class ChatDetailViewModel(
     private val threadId: Int,
     contactName: String,
     initials: String,
+    private val repository: MessagesRepository
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -30,15 +32,22 @@ class ChatDetailViewModel(
 
     private fun loadMessages() {
         scope.launch {
-            // fake loading – later replace with repository
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    messages = listOf(
-                        ChatMessageUi(1, false, "Hey!", "3h ago"),
-                        ChatMessageUi(2, true, "Yo", "3h ago"),
+            try {
+                val msgs = repository.getMessagesForThread(threadId)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        messages = msgs,
+                        errorMessage = null
                     )
-                )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = e.message ?: "Failed to load messages"
+                    )
+                }
             }
         }
     }
@@ -56,13 +65,23 @@ class ChatDetailViewModel(
         val text = _uiState.value.newMessageText.trim()
         if (text.isBlank()) return
 
-        val newId = (_uiState.value.messages.maxOfOrNull { it.id } ?: 0) + 1
-
-        _uiState.update {
-            it.copy(
-                messages = it.messages + ChatMessageUi(newId, true, text, "Now"),
-                newMessageText = ""
-            )
+        scope.launch {
+            try {
+                val msg = repository.sendMessage(threadId, text)
+                _uiState.update {
+                    it.copy(
+                        messages = it.messages + msg,
+                        newMessageText = "",
+                        errorMessage = null
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        errorMessage = e.message ?: "Failed to send message"
+                    )
+                }
+            }
         }
     }
 }

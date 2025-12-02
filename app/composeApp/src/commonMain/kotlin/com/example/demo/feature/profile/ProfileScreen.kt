@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.example.demo.feature.profile.components.SettingsCard
 import com.example.demo.feature.profile.components.VehicleEditDialog
 import com.example.demo.feature.profile.components.VehiclesCard
+import com.example.demo.feature.profile.data.InMemoryProfileRepository
+import com.example.demo.feature.profile.data.ProfileRepository
 import com.example.demo.feature.profile.pages.AccountSettingsScreen
 import com.example.demo.feature.profile.pages.PreferencesScreen
 import com.example.demo.feature.profile.pages.PrivacySafetyScreen
@@ -35,9 +37,10 @@ enum class ProfilePage {
 
 @Composable
 fun ProfileRoute(
-    viewModel: ProfileViewModel = remember { ProfileViewModel() },
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    repository: ProfileRepository
 ) {
+    val viewModel = remember(repository) { ProfileViewModel(repository) }
     var currentPage by remember { mutableStateOf(ProfilePage.Overview) }
     val state by viewModel.uiState.collectAsState()
 
@@ -46,35 +49,36 @@ fun ProfileRoute(
             state = state,
             onEvent = viewModel::onEvent,
             onAccountSettingsClick = { currentPage = ProfilePage.AccountSettings },
-            onPreferencesClick = { currentPage = ProfilePage.Preferences },
-            onPrivacySafetyClick = { currentPage = ProfilePage.PrivacySafety },
+            onPreferencesClick     = { currentPage = ProfilePage.Preferences },
+            onPrivacySafetyClick   = { currentPage = ProfilePage.PrivacySafety },
             modifier = modifier
         )
 
         ProfilePage.AccountSettings -> AccountSettingsScreen(
             state = state.account,
             onChange = { updated ->
-                viewModel.onEvent(ProfileEvent.AccountSettingsChanged(
-                    fullName = updated.fullName,
-                    email = updated.email,
-                    phone = updated.phone,
-                    password = updated.password
-                ))
+                viewModel.onEvent(
+                    ProfileEvent.AccountSettingsChanged(
+                        fullName = updated.fullName,
+                        email    = updated.email,
+                        phone    = updated.phone,
+                        password = updated.password
+                    )
+                )
             },
             onSave = { viewModel.onEvent(ProfileEvent.SaveAccountSettings) },
             onDelete = { viewModel.onEvent(ProfileEvent.DeleteAccount) },
             onBack = { currentPage = ProfilePage.Overview }
         )
 
-
         ProfilePage.Preferences -> PreferencesScreen(
             prefs = state.preferences,
             onChange = { newPrefs ->
                 viewModel.onEvent(
                     ProfileEvent.PreferencesChanged(
-                        notificationsEnabled = newPrefs.notificationsEnabled,
-                        emailUpdatesEnabled = newPrefs.emailUpdatesEnabled,
-                        darkModeEnabled = newPrefs.darkModeEnabled
+                        notificationsEnabled   = newPrefs.notificationsEnabled,
+                        emailUpdatesEnabled    = newPrefs.emailUpdatesEnabled,
+                        darkModeEnabled        = newPrefs.darkModeEnabled
                     )
                 )
             },
@@ -88,10 +92,10 @@ fun ProfileRoute(
             onChange = { updated ->
                 viewModel.onEvent(
                     ProfileEvent.PrivacySafetyChanged(
-                        showProfilePublicly = updated.showProfilePublicly,
+                        showProfilePublicly          = updated.showProfilePublicly,
                         allowMessagesFromNonContacts = updated.allowMessagesFromNonContacts,
-                        shareTripHistoryWithFriends = updated.shareTripHistoryWithFriends,
-                        twoFactorEnabled = updated.twoFactorEnabled
+                        shareTripHistoryWithFriends  = updated.shareTripHistoryWithFriends,
+                        twoFactorEnabled             = updated.twoFactorEnabled
                     )
                 )
             },
@@ -99,7 +103,6 @@ fun ProfileRoute(
             onBack = { currentPage = ProfilePage.Overview },
             modifier = modifier
         )
-
     }
 }
 

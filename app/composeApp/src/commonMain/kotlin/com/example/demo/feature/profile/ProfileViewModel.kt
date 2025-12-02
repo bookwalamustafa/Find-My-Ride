@@ -7,7 +7,7 @@ import com.example.demo.feature.profile.data.InMemoryProfileRepository
 import com.example.demo.feature.profile.data.ProfileRepository
 
 class ProfileViewModel(
-    private val repository: ProfileRepository = InMemoryProfileRepository()
+    private val repository: ProfileRepository
 ) {
 
     private val _uiState = MutableStateFlow(repository.loadInitialProfile())
@@ -180,37 +180,65 @@ class ProfileViewModel(
         )
     }
 
-    private fun saveVehicle() {
+    fun saveVehicle() {
         val state = _uiState.value
         val edit = state.vehicleEdit
 
-        val seats = edit.seatsTotal.toIntOrNull() ?: 0
-        val year = edit.year.toIntOrNull() ?: 0
+        // --- Enforce DB constraints safely ---
+
+        // Seats: parse, clamp 1..8, default to 4 if blank/bad
+        val seats = edit.seatsTotal
+            .toIntOrNull()
+            ?.coerceIn(1, 8)
+            ?: 4
+
+        // Year: parse, clamp 1900..2100, default to 2024 if blank/bad
+        val safeYear = edit.year
+            .toIntOrNull()
+            ?.coerceIn(1900, 2100)
+            ?: 2024
+
+        // Required strings: make sure they are not blank
+        val safeMake = edit.make.ifBlank { "Unknown" }
+        val safeModel = edit.model.ifBlank { "Car" }
+        val safeColor = edit.color.ifBlank { "Unknown" }
+        val basePlate = edit.plate.ifBlank { "TEMP" }
 
         val updatedVehicles = if (edit.id == null) {
-            val newId = (state.vehicles.maxOfOrNull { it.id } ?: 0) + 1
+            // New vehicle → CREATE
+            // Use negative IDs so we never collide with existing positive DB IDs
+            val currentMinId = state.vehicles.minOfOrNull { it.id } ?: 0
+            val newId = if (currentMinId > 0) -1 else currentMinId - 1
+
+            // Make sure plate is unique-ish if user left it blank
+            val safePlate = if (edit.plate.isBlank()) {
+                "$basePlate-$newId"   // <-- use whatever base string you defined above
+            } else {
+                edit.plate
+            }
 
             state.vehicles + VehicleUi(
                 id = newId,
-                ownerUserId = edit.ownerUserId ?: 1,
-                make = edit.make,
-                model = edit.model,
-                color = edit.color,
-                plate = edit.plate,
+                ownerUserId = edit.ownerUserId ?: 1, // current user id placeholder
+                make = safeMake,
+                model = safeModel,
+                color = safeColor,
+                plate = safePlate,
                 seatsTotal = seats,
-                year = year,
+                year = safeYear,
                 funFact = edit.funFact
             )
         } else {
+            // Existing vehicle → UPDATE
             state.vehicles.map { v ->
                 if (v.id == edit.id) {
                     v.copy(
-                        make = edit.make,
-                        model = edit.model,
-                        color = edit.color,
-                        plate = edit.plate,
+                        make = safeMake,
+                        model = safeModel,
+                        color = safeColor,
+                        plate = if (edit.plate.isBlank()) v.plate else edit.plate,
                         seatsTotal = seats,
-                        year = year,
+                        year = safeYear,
                         funFact = edit.funFact
                     )
                 } else v

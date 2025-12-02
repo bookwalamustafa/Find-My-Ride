@@ -9,48 +9,91 @@ import androidx.compose.ui.unit.dp
 import com.example.demo.feature.profile.ProfileRoute
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import com.example.demo.feature.db.RideRepository
 import com.example.demo.feature.messages.MessagesRoute
+import com.example.demo.feature.messages.data.MessagesRepository
+import com.example.demo.feature.profile.data.ProfileRepository
+import com.example.demo.feature.rides.AvailableOfferScreen
+import com.example.demo.feature.rides.AvailableRidesScreen
+import com.example.demo.feature.rides.MyRidesScreen
 import com.example.demo.ui.theme.DrexelBlue
 import com.example.demo.ui.theme.DrexelGold
 
 enum class MainTab { Home, Rides, Messages, Profile }
+private enum class HomePage { Dashboard, AvailableRides, OfferRide }
 
 @Composable
-fun MainRoute() {
-    var currentTab by remember { mutableStateOf(MainTab.Home) } // start on profile for now
+fun MainRoute(
+    rideRepository: RideRepository,
+    profileRepository: ProfileRepository,
+    messagesRepository: MessagesRepository,
+) {
+    var currentTab by remember { mutableStateOf(MainTab.Home) }
+    var homePage by remember { mutableStateOf(HomePage.Dashboard) }
 
     Scaffold(
         bottomBar = {
             MainBottomNav(
                 currentTab = currentTab,
-                onTabSelected = { currentTab = it }
+                onTabSelected = { tab ->
+                    currentTab = tab
+                    if (tab == MainTab.Home) {
+                        homePage = HomePage.Dashboard   // reset when returning to Home tab
+                    }
+                }
             )
         },
         containerColor = Color(0xFFF5F5F7)
     ) { padding ->
         when (currentTab) {
             MainTab.Home -> {
-                // TODO: replace with real HomeRoute
-                Text(
-                    text = "Home screen placeholder",
-                    modifier = Modifier.padding(padding)
-                )
+                when (homePage) {
+                    HomePage.Dashboard -> {
+                        HomeScreen(
+                            modifier = Modifier.padding(padding),
+                            onFindRideClick = { homePage = HomePage.AvailableRides },
+                            onOfferRideClick = { homePage = HomePage.OfferRide },
+                        )
+                    }
+                    HomePage.AvailableRides -> {
+                        AvailableRidesScreen(
+                            modifier = Modifier.padding(padding),
+                            onBack = { homePage = HomePage.Dashboard },
+                            rideRepository = rideRepository
+                        )
+                    }
+                    HomePage.OfferRide -> {
+                        AvailableOfferScreen(
+                            modifier = Modifier.padding(padding),
+                            onBack = { homePage = HomePage.Dashboard },
+                            onPublish = {
+                                homePage = HomePage.Dashboard
+                            }
+                        )
+                    }
+                }
             }
             MainTab.Rides -> {
-                Text(
-                    text = "My Rides placeholder",
+                MyRidesScreen(
                     modifier = Modifier.padding(padding)
                 )
             }
             MainTab.Messages -> {
-                MessagesRoute(modifier = Modifier.padding(padding))
+                MessagesRoute(
+                    modifier = Modifier.padding(padding),
+                    repository = messagesRepository,
+                )
             }
             MainTab.Profile -> {
-                ProfileRoute(modifier = Modifier.padding(padding))
+                ProfileRoute(
+                    modifier = Modifier.padding(padding),
+                    repository = profileRepository
+                )
             }
         }
     }
 }
+
 
 @Composable
 private fun MainBottomNav(
