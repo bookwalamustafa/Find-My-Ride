@@ -141,6 +141,7 @@ After installing Android Studio:
 3. Navigate to **Plugins**
 4. Search for "**Kotlin Multiplatform**"
 5. Click **Install** and restart Android Studio
+- Further Documentation: [Kotlin MultiPlatform](https://kotlinlang.org/docs/multiplatform/quickstart.html#set-up-the-environment)
 
 #### 4. **Configure Android SDK**
 1. In Android Studio, go to **File → Settings → Appearance & Behavior → System Settings → Android SDK**
@@ -419,9 +420,9 @@ This folder contains:
 
 For questions, issues, or contributions:
 
-- **Mustafa Bookwala**: [mmb479@drexel.edu/https://github.com/bookwalamustafa]
-- **Samii Shabuse**: [sus24@drexel.edu/https://github.com/sshabuse]
-- **Kennan Lu**: [kjl354@drexel.edu/kennanLu]
+- **Mustafa Bookwala**: [mmb479@drexel.edu][bookwalamustafa](https://github.com/bookwalamustafa)
+- **Samii Shabuse**: [sus24@drexel.edu][sshabuse](https://github.com/sshabuse)
+- **Kennan Lu**: [kjl354@drexel.edu][kennanLu](https://github.com/kennanLu)
 
 **Course**: CS 461 - Database Systems  
 **Institution**: Drexel University  
