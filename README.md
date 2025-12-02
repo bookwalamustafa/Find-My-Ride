@@ -141,6 +141,7 @@ After installing Android Studio:
 3. Navigate to **Plugins**
 4. Search for "**Kotlin Multiplatform**"
 5. Click **Install** and restart Android Studio
+- Further Documentation: [Kotlin MultiPlatform](https://kotlinlang.org/docs/multiplatform/quickstart.html#set-up-the-environment)
 
 #### 4. **Configure Android SDK**
 1. In Android Studio, go to **File → Settings → Appearance & Behavior → System Settings → Android SDK**
@@ -243,26 +244,58 @@ cd FindMyRide
 
 ### **Using the Pre-loaded Database**
 The project comes with a ready-to-use SQLite database (`findmyride.db`) that includes:
-- Sample user accounts
-- Pre-populated ride offers
-- Example messages
-- Vehicle information
+- Sample user accounts (100+ mock users)
+- Pre-populated ride offers and requests
+- Example message threads and conversations
+- Vehicle information with various makes and models
+- Sample ratings and ride matches
 
-**No manual database setup is required for normal use.**
+**No manual database setup is required for normal use.** The database is automatically bundled with the Android app.
 
-### **Creating a Fresh Database (Advanced)**
+### **Regenerating the Database (Advanced)**
 
-If you want to create a new database from scratch:
+If you need to regenerate the database with fresh mock data or modify the schema, you can use the provided Python script.
 
-#### **Step 1: Navigate to Project Root**
+#### **Prerequisites**
+- Python 3.x installed on your system
+- SQLite3 (included with Python)
+
+#### **Steps to Regenerate**
+
+1. **Navigate to the project root directory:**
 ```bash
-cd /path/to/FindMyRide
+   cd /path/to/FindMyRide
 ```
 
-#### **Step 2: Generate Database from Schema**
-Run the command ```python database/generate_database.py```
+2. **Run the database generation script:**
+```bash
+   python generate_database.py
+```
 
-And the entire database should be populated with mock data.
+#### **What This Script Does**
+
+The `generate_database.py` script automatically:
+1. Creates SQL schema and population files in the `database/` folder
+2. Generates a fresh SQLite database (`findmyride.db`) with:
+   - 100+ randomized users (riders, drivers, and both)
+   - 100+ locations across Philadelphia
+   - 100+ vehicles with realistic details
+   - 100+ ride offers spanning October-November 2025
+   - 100+ ride requests with various statuses
+   - Realistic ride matches and ratings
+   - Sample message threads with conversational history
+3. Copies the generated database to `./app/composeApp/src/androidMain/assets/` so it's bundled with the Android app
+
+#### **Customizing Mock Data**
+
+You can modify the script to adjust:
+- Number of generated records (change the `EXTRA = 100` variable)
+- Date ranges for rides (modify `rand_datetime_oct13_to_nov30()`)
+- User names, vehicle types, and locations (edit the data arrays at the top of the script)
+- Hardcoded test accounts and specific scenarios
+
+After making changes, simply rerun the script to regenerate the database.
+
 ---
 
 ## CRUD Implementation Details
@@ -280,114 +313,23 @@ Repository Implementation (androidMain)
 SQLite Database (findmyride.db)
 ```
 
-### **1. USER Table CRUD** (`AndroidAuthRepository.kt`)
-
-#### **Create (Registration)**
-[FILL IN: Explain how user registration works]
-- Example: "When a user registers, the `registerUser()` function..."
-- SQL query used
-- Password hashing approach
-- Validation checks
-
-#### **Read (Login & Profile Loading)**
-[FILL IN: Explain how user authentication and profile retrieval works]
-- Example: "Login validates credentials using..."
-- How user sessions are managed
-- Profile data retrieval process
-
-#### **Update (Profile Editing)**
-[FILL IN: Explain how profile updates work]
-- Example: "Users can update their profile information through..."
-- Fields that can be updated
-- Validation logic
-
-#### **Delete (Account Deletion)**
-[FILL IN: Explain account deletion]
-- Example: "Account deletion is handled by..."
-- Cascade behavior with related data
-- Soft delete vs hard delete approach
-
----
-
-### **2. VEHICLE Table CRUD** (`AndroidProfileRepository.kt`)
+### **PROFILE Table (Vehicles) CRUD**
 
 #### **Create (Add Vehicle)**
-[FILL IN: Vehicle creation details]
+- **Operation:** Inserts a new vehicle record into the database
+- **Example:** Add a new user vehicle called Nissan Altima
 
-#### **Read (View Vehicles)**
-[FILL IN: How vehicles are displayed]
+#### **Read (Display Vehicles)**
+- **Operation:** Queries and retrieves all vehicles associated with the current user
+- **Example:** Displays "Tesla Model 3, Subaru Outback"
 
-#### **Update (Edit Vehicle)**
-[FILL IN: Vehicle editing process]
+#### **Update (Change Vehicle Info)**
+- **Operation:** Modifies existing vehicle attributes in the database
+- **Example:** Update the Plate Number for Tesla Model 3 from PA-ABDU03 to PA-ABDU15
 
 #### **Delete (Remove Vehicle)**
-[FILL IN: Vehicle removal logic]
-
----
-
-### **3. RIDE_OFFER Table CRUD** (`AndroidRideRepository.kt`)
-
-#### **Create (Publish Ride)**
-[FILL IN: How drivers create ride offers]
-
-#### **Read (Browse Rides)**
-[FILL IN: How rides are listed and filtered]
-
-#### **Update (Modify Ride Details)**
-[FILL IN: Editing existing ride offers]
-
-#### **Delete (Cancel Ride)**
-[FILL IN: Ride cancellation process]
-
----
-
-### **4. RIDE_REQUEST Table CRUD** (`AndroidRideRepository.kt`)
-
-#### **Create (Request a Ride)**
-[FILL IN: How passengers request rides]
-
-#### **Read (View Requests)**
-[FILL IN: Displaying ride requests]
-
-#### **Update (Update Request Status)**
-[FILL IN: Accepting/rejecting requests]
-
-#### **Delete (Cancel Request)**
-[FILL IN: Request cancellation]
-
----
-
-### **5. MESSAGE Table CRUD** (`AndroidMessagesRepository.kt`)
-
-#### **Create (Send Message)**
-[FILL IN: Message sending implementation]
-
-#### **Read (View Messages)**
-[FILL IN: Message retrieval and display]
-
-#### **Update (Edit Message)**
-[FILL IN: If supported, how messages can be edited]
-
-#### **Delete (Delete Message)**
-[FILL IN: Message deletion process]
-
----
-
-### **Database Transaction Handling**
-
-[FILL IN: Explain how you handle database transactions]
-- Example: "All CRUD operations use database transactions to ensure..."
-- Error handling approach
-- Rollback strategy for failed operations
-
-### **Data Validation**
-
-[FILL IN: Describe validation layers]
-- Example: "Input validation occurs at three levels..."
-- UI-level validation
-- Repository-level validation
-- Database constraints
-
+- **Operation:** Removes a vehicle record from the database permanently
+- **Example:** Delete the Subaru Outback Vehicle
 ---
 
 ## Key Implementation Notes
@@ -478,9 +420,9 @@ This folder contains:
 
 For questions, issues, or contributions:
 
-- **Mustafa Bookwala**: [mmb479@drexel.edu/https://github.com/bookwalamustafa]
-- **Samii Shabuse**: [sus24@drexel.edu/https://github.com/sshabuse]
-- **Kennan Lu**: [kjl354@drexel.edu/kennanLu]
+- **Mustafa Bookwala**: mmb479@drexel.edu / [bookwalamustafa](https://github.com/bookwalamustafa)
+- **Samii Shabuse**: sus24@drexel.edu / [sshabuse](https://github.com/sshabuse)
+- **Kennan Lu**: kjl354@drexel.edu / [kennanLu](https://github.com/kennanLu)
 
 **Course**: CS 461 - Database Systems  
 **Institution**: Drexel University  
