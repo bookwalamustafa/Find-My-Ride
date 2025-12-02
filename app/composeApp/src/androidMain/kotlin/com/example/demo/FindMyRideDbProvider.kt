@@ -9,12 +9,18 @@ class FindMyRideDbProvider(private val context: Context) {
 
     private fun ensureDbCopied() {
         val dbFile = context.getDatabasePath(dbName)
-        if (dbFile.exists()) return
 
+        // Always overwrite old database to ensure latest version is used
         dbFile.parentFile?.mkdirs()
 
+        // Delete any existing DB
+        if (dbFile.exists()) {
+            dbFile.delete()
+        }
+
+        // Copy fresh DB from assets
         context.assets.open(dbName).use { input ->
-            FileOutputStream(dbFile).use { output ->
+            dbFile.outputStream().use { output ->
                 input.copyTo(output)
             }
         }

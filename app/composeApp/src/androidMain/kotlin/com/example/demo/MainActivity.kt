@@ -11,14 +11,14 @@ import com.example.demo.App
 import com.example.demo.AndroidRideRepository
 import com.example.demo.AndroidAuthRepository
 import com.example.demo.FindMyRideDbProvider
+import com.example.demo.CurrentUserStore
 import com.example.demo.feature.profile.data.AndroidProfileRepository
 import com.example.demo.feature.messages.data.AndroidMessagesRepository
-import com.example.demo.feature.rides.AvailableRidesScreen
-import com.example.demo.ui.theme.FindRideScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MaterialTheme {
                 Surface {

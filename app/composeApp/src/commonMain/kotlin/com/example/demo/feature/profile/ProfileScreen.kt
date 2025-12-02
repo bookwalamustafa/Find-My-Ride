@@ -38,7 +38,7 @@ enum class ProfilePage {
 @Composable
 fun ProfileRoute(
     modifier: Modifier = Modifier,
-    repository: ProfileRepository = InMemoryProfileRepository()
+    repository: ProfileRepository
 ) {
     val viewModel = remember(repository) { ProfileViewModel(repository) }
     var currentPage by remember { mutableStateOf(ProfilePage.Overview) }
