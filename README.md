@@ -243,26 +243,58 @@ cd FindMyRide
 
 ### **Using the Pre-loaded Database**
 The project comes with a ready-to-use SQLite database (`findmyride.db`) that includes:
-- Sample user accounts
-- Pre-populated ride offers
-- Example messages
-- Vehicle information
+- Sample user accounts (100+ mock users)
+- Pre-populated ride offers and requests
+- Example message threads and conversations
+- Vehicle information with various makes and models
+- Sample ratings and ride matches
 
-**No manual database setup is required for normal use.**
+**No manual database setup is required for normal use.** The database is automatically bundled with the Android app.
 
-### **Creating a Fresh Database (Advanced)**
+### **Regenerating the Database (Advanced)**
 
-If you want to create a new database from scratch:
+If you need to regenerate the database with fresh mock data or modify the schema, you can use the provided Python script.
 
-#### **Step 1: Navigate to Project Root**
+#### **Prerequisites**
+- Python 3.x installed on your system
+- SQLite3 (included with Python)
+
+#### **Steps to Regenerate**
+
+1. **Navigate to the project root directory:**
 ```bash
-cd /path/to/FindMyRide
+   cd /path/to/FindMyRide
 ```
 
-#### **Step 2: Generate Database from Schema**
-Run the command ```python database/generate_database.py```
+2. **Run the database generation script:**
+```bash
+   python generate_database.py
+```
 
-And the entire database should be populated with mock data.
+#### **What This Script Does**
+
+The `generate_database.py` script automatically:
+1. Creates SQL schema and population files in the `database/` folder
+2. Generates a fresh SQLite database (`findmyride.db`) with:
+   - 100+ randomized users (riders, drivers, and both)
+   - 100+ locations across Philadelphia
+   - 100+ vehicles with realistic details
+   - 100+ ride offers spanning October-November 2025
+   - 100+ ride requests with various statuses
+   - Realistic ride matches and ratings
+   - Sample message threads with conversational history
+3. Copies the generated database to `./app/composeApp/src/androidMain/assets/` so it's bundled with the Android app
+
+#### **Customizing Mock Data**
+
+You can modify the script to adjust:
+- Number of generated records (change the `EXTRA = 100` variable)
+- Date ranges for rides (modify `rand_datetime_oct13_to_nov30()`)
+- User names, vehicle types, and locations (edit the data arrays at the top of the script)
+- Hardcoded test accounts and specific scenarios
+
+After making changes, simply rerun the script to regenerate the database.
+
 ---
 
 ## CRUD Implementation Details
