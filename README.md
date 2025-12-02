@@ -260,41 +260,9 @@ cd /path/to/FindMyRide
 ```
 
 #### **Step 2: Generate Database from Schema**
-```bash
-sqlite3 findmyride.db < database/schema.sql
-```
+Run the command ```python database/generate_database.py```
 
-This command:
-- Creates a new `findmyride.db` file
-- Executes all SQL commands in `schema.sql`
-- Sets up all tables, indexes, and constraints
-
-#### **Step 3: Verify Database Creation**
-```bash
-sqlite3 findmyride.db
-```
-
-Inside the SQLite shell:
-```sql
-.tables                    -- List all tables
-.schema USER              -- View USER table structure
-SELECT * FROM USER;       -- View user data
-.exit                     -- Exit SQLite shell
-```
-
-#### **Step 4: Replace Old Database**
-```bash
-# Backup old database (optional)
-mv composeApp/src/androidMain/assets/findmyride.db composeApp/src/androidMain/assets/findmyride.db.backup
-
-# Move new database to assets
-mv findmyride.db composeApp/src/androidMain/assets/
-```
-
-#### **Step 5: Rebuild and Run**
-- In Android Studio: **Build → Rebuild Project**
-- Run the app – it will now use your new database
-
+And the entire database should be populated with mock data.
 ---
 
 ## CRUD Implementation Details
