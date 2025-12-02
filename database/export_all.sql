@@ -22,4 +22,10 @@ SELECT * FROM "RIDE_MATCH" ORDER BY match_id;
 .output exports/RATING.csv
 SELECT * FROM "RATING" ORDER BY rating_id;
 
+.output exports/MESSAGE_THREAD.csv
+SELECT * FROM "MESSAGE_THREAD" ORDER BY thread_id;
+
+.output exports/MESSAGE.csv
+SELECT * FROM "MESSAGE" ORDER BY message_id;
+
 .output stdout

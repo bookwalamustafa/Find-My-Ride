@@ -1,6 +1,6 @@
-PRAGMA foreign_keys = ON; -- Enforces foreign key constraints
 
--- USER Table For Users
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE "USER" (
   user_id       INTEGER PRIMARY KEY,
   email         TEXT    NOT NULL UNIQUE,
@@ -12,7 +12,6 @@ CREATE TABLE "USER" (
   created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
--- VEHICLE Table for Vehicles
 CREATE TABLE "VEHICLE" (
   vehicle_id     INTEGER PRIMARY KEY,
   owner_user_id  INTEGER NOT NULL,
@@ -21,19 +20,17 @@ CREATE TABLE "VEHICLE" (
   color          TEXT,
   plate          TEXT    NOT NULL UNIQUE,
   seats_total    INTEGER NOT NULL CHECK (seats_total BETWEEN 1 AND 8),
-  year           INTEGER CHECK (year BETWEEN 1900 AND 2100), -- We did 2100 because why not keeping it future proof
-  fun_fact       TEXT, -- Just for fun to add some personality for each vehicle
+  year           INTEGER CHECK (year BETWEEN 1900 AND 2100),
+  fun_fact       TEXT,
   FOREIGN KEY (owner_user_id) REFERENCES "USER"(user_id)
 );
 
--- LOCATION Table for Locations
 CREATE TABLE "LOCATION" (
   location_id INTEGER PRIMARY KEY,
   name        TEXT NOT NULL,
   address     TEXT NOT NULL
 );
 
--- RIDE_OFFER Table for Ride Offers
 CREATE TABLE "RIDE_OFFER" (
   offer_id             INTEGER PRIMARY KEY,
   driver_id            INTEGER NOT NULL,
@@ -52,7 +49,6 @@ CREATE TABLE "RIDE_OFFER" (
   FOREIGN KEY (dest_location_id)     REFERENCES "LOCATION"(location_id)
 );
 
--- RIDE_REQUEST Table for Ride Requests
 CREATE TABLE "RIDE_REQUEST" (
   request_id          INTEGER PRIMARY KEY,
   rider_id            INTEGER NOT NULL,
@@ -69,7 +65,6 @@ CREATE TABLE "RIDE_REQUEST" (
   CHECK (latest_pickup IS NULL OR latest_pickup >= earliest_pickup)
 );
 
--- RIDE_MATCH Table for Matches between Requests and Offers
 CREATE TABLE "RIDE_MATCH" (
   match_id     INTEGER PRIMARY KEY,
   request_id   INTEGER NOT NULL,
@@ -83,7 +78,6 @@ CREATE TABLE "RIDE_MATCH" (
   UNIQUE (request_id, offer_id)
 );
 
--- RATING Table for User Ratings
 CREATE TABLE "RATING" (
   rating_id    INTEGER PRIMARY KEY,
   match_id     INTEGER NOT NULL,
@@ -97,4 +91,26 @@ CREATE TABLE "RATING" (
   FOREIGN KEY (to_user_id)   REFERENCES "USER"(user_id),
   CHECK (from_user_id <> to_user_id),
   UNIQUE (match_id, from_user_id, to_user_id)
+);
+
+CREATE TABLE "MESSAGE_THREAD" (
+  thread_id     INTEGER PRIMARY KEY,
+  user1_id      INTEGER NOT NULL,
+  user2_id      INTEGER NOT NULL,
+  ride_match_id INTEGER,
+  created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user1_id)      REFERENCES "USER"(user_id),
+  FOREIGN KEY (user2_id)      REFERENCES "USER"(user_id),
+  FOREIGN KEY (ride_match_id) REFERENCES "RIDE_MATCH"(match_id),
+  CHECK (user1_id <> user2_id)
+);
+
+CREATE TABLE "MESSAGE" (
+  message_id INTEGER PRIMARY KEY,
+  thread_id  INTEGER NOT NULL,
+  sender_id  INTEGER NOT NULL,
+  body       TEXT    NOT NULL,
+  sent_at    TEXT    NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (thread_id) REFERENCES "MESSAGE_THREAD"(thread_id),
+  FOREIGN KEY (sender_id) REFERENCES "USER"(user_id)
 );
